@@ -69,6 +69,8 @@ generate application key
 # enter the container
 $ docker-compose exec php bash
 
+$ composer install
+
 # generate application key
 $ php artisan key:generate
 ```
