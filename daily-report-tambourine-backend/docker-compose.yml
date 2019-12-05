@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  php:
+    build: ./docker/php-apache
+    image: php7.2-apache-composer
+    container_name: ${APP_NAME}-php
+    tty: true
+    volumes:
+      - ./:/var/www/html/
+      - ./docker/php-apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./docker/php-apache/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+
+  postgres:
+    build: ./docker/postgres
+    image: postgres-latest
+    container_name: ${APP_NAME}-postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      LANG: ja_JP.UTF-8
+      TZ: Asia/Tokyo
+      DATABASE_HOST: localhost
+    volumes:
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_data:
+    external: true
