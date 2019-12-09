@@ -44,7 +44,7 @@ edit .env
 APP_NAME=daily-report-tambourine-backend
 
 DB_CONNECTION=pgsql
-DB_HOST=localhost
+DB_HOST=postgres
 DB_PORT=5432
 DB_DATABASE=local_database
 DB_USERNAME=root
