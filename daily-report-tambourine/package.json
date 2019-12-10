@@ -5,7 +5,7 @@
   "author": "manaki",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "nuxt --port 3323",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
@@ -20,7 +20,8 @@
     "markdown-it-toc": "^1.1.0",
     "markdown-it-vue": "^1.0.11",
     "nuxt": "^2.0.0",
-    "nuxt-fontawesome": "^0.4.0"
+    "nuxt-fontawesome": "^0.4.0",
+    "serialize-javascript": "^2.1.2"
   },
   "devDependencies": {
     "node-sass": "^4.13.0",

@@ -1,6 +1,6 @@
 <template>
   <div style="padding-top:100px;">
-    <h2>Welcome {{this.root}}</h2>
+    <h2>Welcome {{$route.params.id}}</h2>
   </div>
 </template>
 
@@ -8,9 +8,11 @@
 export default {
   data() {
     return {
-      root: this.$route.query.id
+      root: this.$route.params.id
     };
-  }
+  },
+
+  methods: {}
 };
 </script>
 
