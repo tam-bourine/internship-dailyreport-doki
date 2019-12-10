@@ -1,6 +1,6 @@
-# daily-report-tambourine
+# daily-report-intern
 
-> Daily Report Website
+> My super Nuxt.js project
 
 ## Build Setup
 
