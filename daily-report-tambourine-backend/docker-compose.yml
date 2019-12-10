@@ -18,7 +18,7 @@ services:
 
   postgres:
     build: ./docker/postgres
-    image: postgres-11
+    image: postgres-11.6
     container_name: ${APP_NAME}-postgres
     environment:
       POSTGRES_DB: ${DB_DATABASE}
@@ -26,7 +26,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       LANG: ja_JP.UTF-8
       TZ: Asia/Tokyo
-      DATABASE_HOST: localhost
+      DATABASE_HOST: postgres
     volumes:
       - ./docker/postgres/init:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
@@ -34,7 +34,7 @@ services:
       - 5432:5432
 
   pgadmin4:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:4.2
     container_name: pgadmin4
     ports:
       - 8000:80
