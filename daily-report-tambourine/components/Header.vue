@@ -3,7 +3,7 @@
     <div class="header__wrapper">
       <div class="header__box">
         <h1 class="header__logo">
-          <nuxt-link to="/home" class="header__link">
+          <nuxt-link to="/" class="header__link">
             <img src="../assets/img/header__logo.png" alt class="header__logo-img" />
             <img src="../assets/img/header__title.png" alt class="header__title" />
           </nuxt-link>
