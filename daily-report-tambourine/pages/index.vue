@@ -1,72 +1,60 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        daily-report-tambourine
-      </h1>
-      <h2 class="subtitle">
-        Daily Report Website
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+  <section class="index">
+    <div class="index__wrapper">
+      <div class="index__left">
+        <h2 class="index__title">今日やったことを投稿しよう！</h2>
+        <p
+          class="index__description"
+        >Qiitaは、エンジニアリングに関する知識を記録・共有するためのサービスです。コードを書いていて気づいたことや、自分がハマったあの仕様について、他のエンジニアと知見を共有しましょう ;)</p>
+      </div>
+      <div class="index__right">
+        <!-- Login components -->
+        <p>test</p>
+        <p>test</p>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
-  components: {
-    Logo
+  components: {},
+  data() {
+    return {
+      model: "# Hello World!"
+    };
+  },
+  methods: {
+    test() {
+      console.log(result);
+    },
+    render() {
+      console.log(this.$md.render(this.model));
+      return this.$md.render(this.model);
+    }
   }
-}
+};
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+<style lang='scss' scoped>
+.index {
+  &__wrapper {
+    padding-top: 20px + 57px;
+    display: flex;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
+  &__left {
+    width: 60%;
+  }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
+  &__right {
+    width: 40%;
+  }
 
-.links {
-  padding-top: 15px;
+  &__description {
+    line-height: 1.5;
+  }
 }
 </style>
