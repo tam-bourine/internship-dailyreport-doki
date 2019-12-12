@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -22,6 +23,7 @@ class UserController extends Controller
         $user->email_verified_at = $request->email_verified_at;
         $user->password = $request->password;
         $user->remember_token = $request->remember_token;
+        $user->api_token = Str::random(80);
         $user->save();
     }
 
