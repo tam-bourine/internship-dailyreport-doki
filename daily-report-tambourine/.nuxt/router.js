@@ -6,9 +6,9 @@ import scrollBehavior from './router.scrollBehavior.js'
 const _0c3d58a0 = () => interopDefault(import('../pages/editor.vue' /* webpackChunkName: "pages/editor" */))
 const _291aace2 = () => interopDefault(import('../pages/home.vue' /* webpackChunkName: "pages/home" */))
 const _181fd5f6 = () => interopDefault(import('../pages/login.vue' /* webpackChunkName: "pages/login" */))
-const _0199c1fb = () => interopDefault(import('../pages/signUp.vue' /* webpackChunkName: "pages/signUp" */))
+const _eb58ac06 = () => interopDefault(import('../pages/userPage.vue' /* webpackChunkName: "pages/userPage" */))
 const _83d8a050 = () => interopDefault(import('../pages/users/index.vue' /* webpackChunkName: "pages/users/index" */))
-const _1dfbc840 = () => interopDefault(import('../pages/users/_id.vue' /* webpackChunkName: "pages/users/_id" */))
+const _388f00a0 = () => interopDefault(import('../pages/users/_user.vue' /* webpackChunkName: "pages/users/_user" */))
 const _4e7832df = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 Vue.use(Router)
@@ -33,17 +33,17 @@ export const routerOptions = {
     component: _181fd5f6,
     name: "login"
   }, {
-    path: "/signUp",
-    component: _0199c1fb,
-    name: "signUp"
+    path: "/userPage",
+    component: _eb58ac06,
+    name: "userPage"
   }, {
     path: "/users",
     component: _83d8a050,
     name: "users"
   }, {
-    path: "/users/:id",
-    component: _1dfbc840,
-    name: "users-id"
+    path: "/users/:user",
+    component: _388f00a0,
+    name: "users-user"
   }, {
     path: "/",
     component: _4e7832df,

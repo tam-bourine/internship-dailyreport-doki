@@ -34,7 +34,8 @@ export default {
    ** Global CSS
    */
   css: [
-    '@/assets/css/reset.css'
+    '@/assets/css/reset.css',
+    '@/assets/css/index.css'
   ],
   /*
    ** Plugins to load before mounting the App
@@ -51,13 +52,22 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/markdownit',
-    'nuxt-fontawesome'
+    'nuxt-fontawesome',
+    '@nuxtjs/auth'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+
+
+  auth: {
+
+
+
+  },
+
   /*
    ** Build configuration
    */

@@ -32,6 +32,7 @@ export default {};
   background-color: #5679e8;
   position: fixed;
   width: 100%;
+  z-index: 1;
   &__wrapper {
     max-width: 1100px;
     padding: 5px 0;
@@ -68,6 +69,8 @@ export default {};
 
   &__logo-img {
     max-width: 30px;
+    margin-right: -10px;
+    transform: rotate(20deg);
   }
 }
 
