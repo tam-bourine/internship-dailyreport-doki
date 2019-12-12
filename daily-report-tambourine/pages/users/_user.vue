@@ -1,14 +1,12 @@
 <template>
-  <div style="padding-top:100px;">
-    <h2>Welcome {{$route.params.id}}</h2>
-  </div>
+  <section class="user__page"></section>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      root: this.$route.params.id
+      root: this.$route.params.user
     };
   },
 

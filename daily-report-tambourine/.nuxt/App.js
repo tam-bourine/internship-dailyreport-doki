@@ -13,6 +13,8 @@ import '../node_modules/@fortawesome/fontawesome-svg-core/styles.css'
 
 import '../assets/css/reset.css'
 
+import '../assets/css/index.css'
+
 import _6f6c098b from '../layouts/default.vue'
 import _7762aba2 from '../layouts/guest.vue'
 import _7f6cf5b1 from '../layouts/mypage.vue'

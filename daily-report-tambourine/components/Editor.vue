@@ -1,7 +1,6 @@
 <template>
   <section id="editor" class="editor">
     <div class="editor__wrapper">
-      <input v-model="title" class="editor__input editor__title" type="text" placeholder="タイトル" />
       <input
         class="editor__tag editor__input"
         type="text"
@@ -10,7 +9,7 @@
       />
 
       <div class="editor__content">
-        <div class="editor__script">
+        <div class="editor__script" v-if='!leftScale' :class='{scale:rightScale,unscale:!rightScale}'>
           <div class="editor__bar">
             <div class="editor__bar-left">
               <p class="editor__bar-title">本文</p>
@@ -29,6 +28,14 @@
               <a>
                 <font-awesome-icon class="editor__bar-icon" icon="question-circle" />
               </a>
+
+              <a @click.prevent='scaleRight()'>
+                <font-awesome-icon  v-if='rightScale' class="editor__bar-icon" icon="arrow-left"  />
+
+              </a>
+
+
+
             </div>
           </div>
 
@@ -43,40 +50,59 @@
           ></textarea>
         </div>
 
+<!-- 
+ -->
         <!-- End of editor script -->
-        <div class="editor__preview">
+        <div class="editor__preview" :class='{scale:leftScale,unscale:!leftScale}' v-if='!rightScale' >
           <div class="editor__bar">
             <div class="editor__bar-right">
-              <a>
-                <font-awesome-icon class="editor__bar-icon" icon="arrow-left" />
+             <a　@click.prevent='scaleLeft()'>
+                <font-awesome-icon v-if='!leftScale' class="editor__bar-icon" icon="arrow-left"/>
+                <font-awesome-icon  v-else  class='editor__bar-icon' icon='arrow-right' />
+             </a>
+              <a >
+                <font-awesome-icon v-if='!leftScale' class="editor__bar-icon" icon="arrow-right" @click.prevent='scaleRight()' />
               </a>
 
-              <a>
-                <font-awesome-icon class="editor__bar-icon" icon="arrow-right" />
-              </a>
-
-              <a>
-                <font-awesome-icon class="editor__bar-icon" icon="question-circle" />
-              </a>
             </div>
-            <div class="editor__bar-left">
+       <!--      <div class="editor__bar-left">
               <p class="editor__bar-title">本文</p>
               <a class="editor__bar-link">良い記事を書くためには</a>
-            </div>
+            </div> -->
           </div>
           <MarkdownItVue class="md-body editor__preview-render" :content="this.script" />
-          <!-- 
-          <div v-html="render()" style="background-color:#f" class="editor__preview-render"></div>
-          -->
         </div>
         <!-- End of preview -->
       </div>
+
       <!-- Editor Content -->
     </div>
-    <!-- Editor Wrapper -->
+    <div class="editor__footer">
+      <div class="editor__footer-btns">
+        <a class="editor__footer-btn" @click.prevent="postDraft()">
+          <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿する
+        </a>
 
-    <button @click.prevent="postDraft()">Post Request Test</button>
-    <button @click.prevent="getDraft()">Get draft data</button>
+        <a class="editor__footer-btn icon--small clicked" @click="showMenu=!showMenu">
+          <span :class="{clicked:!showMenu,unClicked:showMenu}">▼</span>
+          <div class="editor__menu visible" v-if="showMenu">
+            <ul class="editor__lists">
+              <li class="editor__list">
+                <font-awesome-icon icon="save" class="editor__list-icon"></font-awesome-icon>下書き保存
+              </li>
+              <li class="editor__list">
+                <font-awesome-icon icon="lock" class="editor__list-icon"></font-awesome-icon>限定版投稿
+              </li>
+              <li class="editor__list">
+                <font-awesome-icon icon="upload" class="editor__list-icon"></font-awesome-icon>日報を投稿
+              </li>
+            </ul>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Editor Wrapper -->
   </section>
 </template>
 
@@ -91,11 +117,13 @@ export default {
   data() {
     return {
       script: "Welcome to daily report!!",
-      title: "",
       tag: "",
       user: {
         name: "manaki"
-      }
+      },
+      showMenu: false,
+      leftScale:false,
+      rightScale:false
     };
   },
 
@@ -110,11 +138,11 @@ export default {
             time: time,
             script: this.script,
             tag: this.tag,
-            title: this.title,
             author: this.user.name
           }
         }
       );
+      alert(res);
     },
 
     async getDraft() {
@@ -123,8 +151,23 @@ export default {
       );
 
       console.log(res);
+
       this.script = res.data.script.text;
+    },
+
+    toggleMenu() {
+      this.showMenu = !this.showMenu;
+    },
+
+    scaleLeft() {
+      this.leftScale = !this.leftScale;
+    },
+
+    scaleRight() {
+      this.rightScale = !this.rightScale;
     }
+
+    
   }
 };
 </script>
@@ -137,21 +180,29 @@ select {
   outline: 0;
 }
 
+a:hover {
+  cursor: pointer;
+}
+
 .editor {
   background-color: #f7f7f7;
-  top: 55px;
   position: absolute;
-  width: 100%;
+  left: 0;
+  top: 49px;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
   &__wrapper {
     padding: 10px;
     max-width: 100%;
-    max-height: 80%;
+    height: 88%;
   }
   &__input {
     border-radius: 10px;
     width: 100%;
     display: block;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
     &:nth-child(2) {
       margin-top: 10px;
@@ -159,7 +210,7 @@ select {
   }
 
   &__title {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   &__tag {
@@ -170,9 +221,9 @@ select {
     display: flex;
     margin-top: 16px;
     width: 100%;
-    height: 60vh;
-    max-height: 500px;
-    border-radius: 20px;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-bottom: none;
   }
 
   &__script-input {
@@ -181,7 +232,8 @@ select {
     resize: none;
     border: 0;
     padding: 16px;
-    font-size: 16px;
+    font-size: 14px;
+    font-family: "Noto Sans JP", sans-serif;
     //border-top: 8px solid #97caef;
   }
 
@@ -192,7 +244,6 @@ select {
 
   &__preview {
     width: 50%;
-    height: 100%;
   }
 
   &__preview-render {
@@ -201,17 +252,23 @@ select {
     height: 100%;
     background-color: #fff;
     overflow: auto;
+    font-family: "Noto Sans JP", sans-serif;
   }
 
   &__bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 29px;
   }
   &__bar-left {
     display: flex;
     background-color: #f7f7f7;
   }
+
+&__bar-right {
+  padding-left:8px;
+}
 
   &__bar-title {
     font-size: 13px;
@@ -239,10 +296,98 @@ select {
     }
   }
 
-  &__footer-content {
+  &__footer {
     display: flex;
     justify-content: flex-end;
-    background-color: red;
+    align-items: center;
+    width: 100%;
+    background-color: #f7f7f7;
+    position: fixed;
+    bottom: 0;
+    padding: 4px;
+    margin: 0 auto;
+    height: 6%;
+  }
+
+  &__footer-btn {
+    padding: 8px 14px;
+    border-radius: 4px 0 0 4px;
+    font-size: 12px;
+    background-color: #5679e8;
+    color: #fff;
+    text-decoration: none;
+    &:nth-child(2) {
+      padding: 11px 14px;
+    }
+
+    &:hover {
+      background-color: #33488b;
+      transition: 0.2s;
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    transform: rotate(180deg);
+    width: 150px;
+    border: 4px solid #5679e8;
+    bottom: -100px;
+    color: black;
+    display: flex;
+    widows: 100%;
+    right: 20;
+    max-width: 200px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__lists {
+    margin: 0 auto;
+  }
+
+  &__list {
+    margin: 0 auto;
+    line-height: 2;
+    list-style: none;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+
+    &:hover {
+      background-color: #bbc9f5;
+    }
+    &-icon {
+      margin-right: 5px;
+    }
   }
 }
+
+.clicked {
+  display: inline-block;
+  transition: 0.2s;
+  transform: rotate(-180deg);
+}
+
+.unClicked {
+  display: inline-block;
+  transition: 0.2s;
+  transform: rotate(0deg);
+}
+
+.md-body {
+  font-size: 14px;
+}
+
+.scale {
+
+  width:100%;
+  transition: .2s;
+
+}
+
+.unscale {
+  width:50%;
+  transition: .2s;
+}
+
 </style>

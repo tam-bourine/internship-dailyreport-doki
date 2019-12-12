@@ -2,16 +2,30 @@
   <form action class="form">
     <div class="form__wrapper">
       <div class="form__card">
-        <h2 class="form__title">Let's get started</h2>
+        <h2 class="form__title">ようこそ！(^o^)</h2>
         <div class="form__inputs">
           <div class="form__input-box">
-            <input id="emial" class="form__input" placeholder="メールアドレス" type="email" />
+            <input
+              id="emial"
+              class="form__input"
+              v-model="email"
+              placeholder="メールアドレス"
+              type="email"
+            />
           </div>
 
           <div class="form__input-box">
-            <input id="passowrd" class="form__input" placeholder="パスワード" type="password" />
+            <input
+              id="passowrd"
+              class="form__input"
+              placeholder="パスワード"
+              type="password"
+              v-model="password"
+            />
           </div>
-          <a class="form__btn">アカウントを作成する</a>
+          <a class="form__btn" @click.prevent="submitForm()">アカウントを作成する</a>
+          <a class="form__btn" @click.prevent="login()">アカウントにログイン</a>
+
           <a class="form__link">既にアカウントを持っている場合はこちら</a>
         </div>
       </div>
@@ -21,25 +35,39 @@
 
 <script>
 export default {
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
   methods: {
     /* Create User Account  */
-    async createUser() {
-      this.$axios.post("https://tango-dojo-api.herokuapp.com/createUser", {
-        email: this.email,
-        password: this.password
-      });
-    },
-
     async submitForm() {
       const token = await this.$axios.post(
-        "https://tango-dojo-api.herokuapp.com/submit",
+        "https://tango-dojo-api.herokuapp.com/api/login",
         {
-          email: this.email,
-          password: this.password
+          userInfo: {
+            email: this.email,
+            password: this.password
+          }
         }
       );
-
+      console.log(token, "this is token");
       // this.$state.dispatch('')
+    },
+
+    async login() {
+      try {
+        await this.$auth.loginWith("local", {
+          data: {
+            email: this.email,
+            password: this.password
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
@@ -51,7 +79,13 @@ export default {
 .form {
   font-family: "Noto Sans JP", sans-serif;
   padding-top: 57+96px;
-  background-color: #e4e7fd;
+  background-color: #eee;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
   &__wrapper {
     max-width: 1100px;
     margin: 0 auto;

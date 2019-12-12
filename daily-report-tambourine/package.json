@@ -5,7 +5,7 @@
   "author": "manaki",
   "private": true,
   "scripts": {
-    "dev": "nuxt --port 3323",
+    "dev": "nuxt --port 3313",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
@@ -14,6 +14,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/vue-fontawesome": "^0.1.8",
+    "@nuxtjs/auth": "^4.8.4",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/markdownit": "^1.2.7",
     "highlight.js": "^9.16.2",
