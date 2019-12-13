@@ -127,6 +127,7 @@ $ php artisan key:generate
 {
     "name" : "name",
     "email" : "xxx@example.com",
+    "password" : "password"
 }
 ```
 
