@@ -74,3 +74,119 @@ $ composer install
 # generate application key
 $ php artisan key:generate
 ```
+## API DOCUMENT
+
+### USERS
+
+**GET** api/users  
+全てのユーザーを返す  
+#### Response
+```javascript
+[{
+    "id" : 1,
+    "name" : "name",
+    "email" : "xxx@example.com",
+    "email_verified_at" : "2019-12-12 08:01:24",
+    "created_at" : "2019-12-12 08:01:24",
+    "updated_at" : "2019-12-12 08:01:24",
+    "api_token" : "token"
+ },
+ {
+    ...
+ }]
+```
+**GET** api/users  
+ユーザーを返す  
+#### Response
+```javascript
+{
+    "id" : 1,
+    "name" : "name",
+    "email" : "xxx@example.com",
+    "email_verified_at" : "2019-12-12 08:01:24",
+    "created_at" : "2019-12-12 08:01:24",
+    "updated_at" : "2019-12-12 08:01:24",
+    "api_token" : "token"
+ }
+```
+
+**POST** api/users  
+新規ユーザー登録  
+#### Request
+```javascript
+{
+    "name" : "name",
+    "email" : "xxx@example.com",
+}
+```
+
+**PUT/PATCH** api/users/{user_id}  
+ユーザー情報の更新  
+#### Request
+```javascript
+{
+    "name" : "name",
+    "email" : "xxx@example.com",
+    "password" : "password"
+}
+```
+
+**DELETE** api/users/{user_id}  
+ユーザー情報の削除  
+
+### POSTS
+
+
+**GET** api/posts/{user_id}  
+全投稿を返す  
+#### Response
+```javascript
+[{
+    "id" : 1,
+    "user_id" : {user_id},
+    "body" : "text",
+    "created_at" : "1991-07-02 00:00:00",
+    "updated_at" : "2018-10-05 00:00:00"
+ },
+ {
+    ...
+}]
+```
+
+**GET** api/posts/{user_id}  
+選択したユーザーの全投稿を返す  
+#### Response
+```javascript
+[{
+    "id" : 1,
+    "user_id" : {user_id},
+    "body" : "text",
+    "created_at" : "1991-07-02 00:00:00",
+    "updated_at" : "2018-10-05 00:00:00"
+ },
+ {
+    ...
+}]
+```
+
+**POST** api/posts  
+新規投稿を作成  
+#### Request
+```javascript
+{
+    "user_id" : {user_id},
+    "body" : "text",
+}
+```
+**PUT/PATCH** api/posts/{post_id}  
+投稿を更新  
+#### Request
+```javascript
+{
+    "user_id" : {user_id},
+    "body" : "text",
+}
+```
+
+**DELETE** api/posts/{post_id}  
+投稿を削除  
