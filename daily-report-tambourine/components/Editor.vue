@@ -9,11 +9,19 @@
       />
 
       <div class="editor__content">
-        <div class="editor__script" v-if='!leftScale' :class='{scale:rightScale,unscale:!rightScale}'>
+        <div
+          class="editor__script"
+          v-if="!leftScale"
+          :class="{scale:rightScale,unscale:!rightScale}"
+        >
           <div class="editor__bar">
             <div class="editor__bar-left">
               <p class="editor__bar-title">本文</p>
-              <a class="editor__bar-link">良い記事を書くためには</a>
+              <a
+                class="editor__bar-link"
+                　href="https://01intern.com/magazine/archives/15251"
+                target="_blank"
+              >良い日報を書くためには</a>
             </div>
 
             <div class="editor__bar-right">
@@ -25,17 +33,17 @@
                 <font-awesome-icon class="editor__bar-icon" icon="smile-beam" />
               </a>
 
-              <a>
+              <a
+                href="https://qiita.com/Minalinsky_1911/items/b684cfabe0f2fde0c67b"
+                target="_blank"
+                class="editor__icon-question"
+              >
                 <font-awesome-icon class="editor__bar-icon" icon="question-circle" />
               </a>
 
-              <a @click.prevent='scaleRight()'>
-                <font-awesome-icon  v-if='rightScale' class="editor__bar-icon" icon="arrow-left"  />
-
+              <a @click.prevent="scaleRight()">
+                <font-awesome-icon v-if="rightScale" class="editor__bar-icon" icon="arrow-left" />
               </a>
-
-
-
             </div>
           </div>
 
@@ -46,29 +54,65 @@
             cols="30"
             v-model="script"
             rows="10"
-            placeholder="今日の日報をMarkdown記法で書いて共有しよう"
+            placeholder="今日の日報をMarkdown記法で書いて共有しよう
+
+<見出し>           
+# 見出し 1
+## 見出し 2
+### 見出し 3
+
+<強調>
+**強調**
+
+<リンク>
+[テキスト](URL)
+
+<コード>
+```javascript
+let welcome =“welcome”;
+console.log(welcome);
+```
+
+<リスト>
+- 1
+- 2
+- 3
+"
           ></textarea>
         </div>
 
-<!-- 
- -->
+        <!-- 
+        -->
         <!-- End of editor script -->
-        <div class="editor__preview" :class='{scale:leftScale,unscale:!leftScale}' v-if='!rightScale' >
+        <div
+          class="editor__preview"
+          :class="{scale:leftScale,unscale:!leftScale}"
+          v-if="!rightScale"
+        >
           <div class="editor__bar">
             <div class="editor__bar-right">
-             <a　@click.prevent='scaleLeft()'>
-                <font-awesome-icon v-if='!leftScale' class="editor__bar-icon" icon="arrow-left"/>
-                <font-awesome-icon  v-else  class='editor__bar-icon' icon='arrow-right' />
-             </a>
-              <a >
-                <font-awesome-icon v-if='!leftScale' class="editor__bar-icon" icon="arrow-right" @click.prevent='scaleRight()' />
+              <a @click.prevent="scaleLeft()">
+                <font-awesome-icon v-if="!leftScale" class="editor__bar-icon" icon="arrow-left" />
+                <font-awesome-icon v-else class="editor__bar-icon" icon="arrow-right" />
               </a>
-
+              <a>
+                <font-awesome-icon
+                  v-if="!leftScale"
+                  class="editor__bar-icon"
+                  icon="arrow-right"
+                  @click.prevent="scaleRight()"
+                />
+              </a>
             </div>
-       <!--      <div class="editor__bar-left">
+            <!--      <div class="editor__bar-left">
               <p class="editor__bar-title">本文</p>
               <a class="editor__bar-link">良い記事を書くためには</a>
-            </div> -->
+            </div>-->
+          </div>
+          <div class="editor__helper" v-if="!this.script">
+            <p class="editor__helper-text">
+              <font-awesome-icon icon="question-circle"></font-awesome-icon>マークダウンの書き方
+            </p>
           </div>
           <MarkdownItVue class="md-body editor__preview-render" :content="this.script" />
         </div>
@@ -79,21 +123,28 @@
     </div>
     <div class="editor__footer">
       <div class="editor__footer-btns">
-        <a class="editor__footer-btn" @click.prevent="postDraft()">
-          <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿する
+        <!--  v-if -->
+        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="testDraft()">
+          <font-awesome-icon icon="save" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き保存
         </a>
-
+        <a class="editor__footer-btn" v-if="this.selected==1" @click.prevent="testDraft()">
+          <font-awesome-icon icon="download" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き読込
+        </a>
+        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="testDraft()">
+          <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿
+        </a>
+        <!-- v-if end -->
         <a class="editor__footer-btn icon--small clicked" @click="showMenu=!showMenu">
           <span :class="{clicked:!showMenu,unClicked:showMenu}">▼</span>
           <div class="editor__menu visible" v-if="showMenu">
             <ul class="editor__lists">
-              <li class="editor__list">
+              <li class="editor__list" @click.prevent="selected = 0">
                 <font-awesome-icon icon="save" class="editor__list-icon"></font-awesome-icon>下書き保存
               </li>
-              <li class="editor__list">
-                <font-awesome-icon icon="lock" class="editor__list-icon"></font-awesome-icon>限定版投稿
+              <li class="editor__list" @click.prevent="selected =1">
+                <font-awesome-icon icon="download" class="editor__list-icon"></font-awesome-icon>下書き読込
               </li>
-              <li class="editor__list">
+              <li class="editor__list active" @click.prevent="selected=2">
                 <font-awesome-icon icon="upload" class="editor__list-icon"></font-awesome-icon>日報を投稿
               </li>
             </ul>
@@ -116,14 +167,15 @@ export default {
   },
   data() {
     return {
-      script: "Welcome to daily report!!",
+      script: "",
       tag: "",
       user: {
         name: "manaki"
       },
       showMenu: false,
-      leftScale:false,
-      rightScale:false
+      leftScale: false,
+      rightScale: false,
+      selected: 2
     };
   },
 
@@ -145,14 +197,27 @@ export default {
       alert(res);
     },
 
+    async testDraft() {
+      let time = new Date().toLocaleString();
+      const res = await this.$axios.post("http://localhost:5000/markdown", {
+        draft: {
+          time: time,
+          script: this.script,
+          tag: this.tag,
+          author: this.user.name
+        }
+      });
+      alert(res);
+    },
     async getDraft() {
       const res = await this.$axios.get(
         "https://tango-dojo-api.herokuapp.com/getDraft"
       );
-
-      console.log(res);
-
       this.script = res.data.script.text;
+    },
+
+    test() {
+      this.selected = 1;
     },
 
     toggleMenu() {
@@ -166,8 +231,6 @@ export default {
     scaleRight() {
       this.rightScale = !this.rightScale;
     }
-
-    
   }
 };
 </script>
@@ -244,6 +307,7 @@ a:hover {
 
   &__preview {
     width: 50%;
+    position: relative;
   }
 
   &__preview-render {
@@ -266,9 +330,9 @@ a:hover {
     background-color: #f7f7f7;
   }
 
-&__bar-right {
-  padding-left:8px;
-}
+  &__bar-right {
+    padding-left: 8px;
+  }
 
   &__bar-title {
     font-size: 13px;
@@ -280,6 +344,7 @@ a:hover {
   &__bar-link {
     @extend .editor__bar-title;
     background-color: #f7f7f7;
+    text-decoration: none;
 
     &:hover {
       background-color: #999999;
@@ -310,13 +375,14 @@ a:hover {
   }
 
   &__footer-btn {
-    padding: 8px 14px;
+    padding: 9px 14px;
     border-radius: 4px 0 0 4px;
     font-size: 12px;
     background-color: #5679e8;
     color: #fff;
     text-decoration: none;
     &:nth-child(2) {
+      border: 1px solid black;
       padding: 11px 14px;
     }
 
@@ -329,13 +395,13 @@ a:hover {
   &__menu {
     position: absolute;
     transform: rotate(180deg);
-    width: 150px;
+    width: 141px;
     border: 4px solid #5679e8;
-    bottom: -100px;
+    bottom: -117px;
     color: black;
     display: flex;
     widows: 100%;
-    right: 20;
+    left: 10px;
     max-width: 200px;
     flex-direction: column;
     align-items: center;
@@ -343,6 +409,18 @@ a:hover {
 
   &__lists {
     margin: 0 auto;
+    padding: 10px 0;
+    position: relative;
+    &:after {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: 12px solid transparent;
+      border-top: 12px solid #5679e8;
+      content: "";
+      right: -4px;
+      bottom: -28px;
+    }
   }
 
   &__list {
@@ -359,6 +437,39 @@ a:hover {
     &-icon {
       margin-right: 5px;
     }
+  }
+
+  &__icon-question {
+    position: relative;
+
+    &:before {
+      content: "";
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+  }
+
+  &__helper {
+    background-image: url("../assets/img/editor__arrow.png");
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 30px;
+    left: 20px;
+    transform: rotate(-25deg);
+    opacity: 0.7;
+    background-size: contain;
+  }
+
+  &__helper-text {
+    display: inline-block;
+    width: 200px;
+    top: 85px;
+    left: 50px;
+    position: absolute;
+    transform: rotate(25deg);
   }
 }
 
@@ -379,15 +490,12 @@ a:hover {
 }
 
 .scale {
-
-  width:100%;
-  transition: .2s;
-
+  width: 100%;
+  transition: 0.2s;
 }
 
 .unscale {
-  width:50%;
-  transition: .2s;
+  width: 50%;
+  transition: 0.2s;
 }
-
 </style>

@@ -49,7 +49,7 @@ export default {
   background-color: white;
   border-radius: 10px;
   text-align: left;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  // box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   &__wrapper {
     display: flex;
   }
@@ -93,6 +93,7 @@ export default {
 
   &__tag {
     margin-top: 14px;
+    font-size: 14px;
     display: inline-block;
     background-color: #eee;
     padding: 5px 10px;

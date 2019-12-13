@@ -27,6 +27,7 @@
           <a class="form__btn" @click.prevent="login()">アカウントにログイン</a>
 
           <a class="form__link">既にアカウントを持っている場合はこちら</a>
+          <h2>{{this.$auth.loggedIn}}</h2>
         </div>
       </div>
     </div>
@@ -35,6 +36,12 @@
 
 <script>
 export default {
+  middleware({ store, redirect }) {
+    if (store.$auth.loggedIn) {
+      redirect("/success");
+    }
+  },
+
   data() {
     return {
       email: "",
@@ -57,17 +64,30 @@ export default {
       // this.$state.dispatch('')
     },
 
+    async loginTest() {
+      const { test } = await this.$auth.loginWith("local", {
+        data: {
+          email: this.email,
+          password: this.password
+        }
+      });
+    },
+
     async login() {
       try {
         await this.$auth.loginWith("local", {
           data: {
-            email: this.email,
-            password: this.password
+            userInfo: {
+              email: this.email,
+              password: this.password
+            }
           }
         });
       } catch (error) {
         console.log(error);
       }
+
+      alert("executed login");
     }
   }
 };

@@ -28,6 +28,12 @@
       </div>
 
       <div class="home__right">
+        <div class="home__ad">
+          <a href="https://www.tam-bourine.co.jp/" target="_blank">
+            <img src="../assets/img/home__img.jpg" alt="company-ad" class="home__ad-img" />
+          </a>
+        </div>
+
         <div class="home__profile">
           <div class="home__profile-info">
             <img class="home__logo" src="../assets/img/nippo__icon.svg" alt="profile-icon" />
@@ -74,9 +80,7 @@ export default {
 
   created: async function() {
     //if not logged in send user to login form or singup
-    let draftData = await this.$axios.get(
-      "https://tango-dojo-api.herokuapp.com/getDraft"
-    );
+    let draftData = await this.$axios.get("http://localhost:5000/getDraft");
     this.articles = draftData.data;
   }
 };
@@ -102,22 +106,25 @@ body {
     font-size: 32px;
   }
 
+  &__center {
+    width: 580px;
+  }
+
   &__right {
     margin-left: 16px;
-    margin-top: 300px;
     width: 300px;
   }
   &__card {
     margin-top: 16px;
     &:nth-child(1) {
       margin-top: 0;
-      border-radius: 0;
     }
   }
 
   &__profile {
+    margin-top: 20px;
     background-color: #fff;
-    padding-top: 10px;
+    padding-top: 16px;
   }
 
   &__sort {
@@ -203,6 +210,16 @@ body {
     font-weight: 300;
     color: #999;
     margin-top: 4px;
+  }
+
+  &__ad-img {
+    max-width: 100%;
+    object-fit: cover;
+
+    &:hover {
+      opacity: 0.7;
+      transition: 0.4s;
+    }
   }
 }
 

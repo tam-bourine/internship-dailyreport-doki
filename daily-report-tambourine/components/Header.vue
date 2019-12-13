@@ -9,7 +9,7 @@
           </nuxt-link>
         </h1>
         <nuxt-link to="/home" class="header__link">ホーム</nuxt-link>
-        <nuxt-link to="/community" class="header__link">コミュニティ</nuxt-link>
+        <nuxt-link to="/users" class="header__link">ユーザー一覧</nuxt-link>
       </div>
 
       <div class="header__box">

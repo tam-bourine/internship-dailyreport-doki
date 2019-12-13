@@ -1,0 +1,11 @@
+[{
+    "time": "2019/12/13 11:23:57",
+    "script": "## 今日したこと\n- backlog移行\n- swagger調査(netlifyで構築できるかどうか)\n\n## 所感\nbacklogの移行ようやく完了しました！！！(残り一件除いて)  \n\nnetlify触ったことなかったので一通り調べてswaggerはAPIドキュメント(SwaggerUI)をあげることはできそうな感じでした。  \n\nSwaggerについてもまだまだわかっていない部分があるので調べていきたいと思います。\n\n",
+    "tag": "",
+    "author": "manaki"
+}, {
+    "time": "2019/12/13 11:28:08",
+    "script": "## 今日した事\n\n- for 文の勉強\n- if文の勉強\n\n\n## 所感\n\nfor文の書き方を学びました:smile:\n\n```javascript\n\nfor(let i=0; i < 10; i++) \n{\n console.log(\"ハロー\");\n}\n\n```\n\nif文はこう書きます\n```javascript\nlet weather = 'sunny';\n\nif(weather == 'sunny') \n{\n　console.log('今日は天気が良くていい気分');\n}\n```\n明日は配列について勉強していきたいと思います。\n",
+    "tag": "",
+    "author": "manaki"
+}]
