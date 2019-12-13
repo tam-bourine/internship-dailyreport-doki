@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Post;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -24,8 +25,9 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::find($id);
-        return $post;
+        $current_user = User::find($id);
+        $posts = Post::where('user_id', $current_user->id)->get();
+        return $posts;
     }
 
     public function update(Request $request, $id)
