@@ -1,6 +1,8 @@
 docker/pgadmin4/pgadmin4.db
 docker/pgadmin4/sessions
 .env.backup
+.nuxt
+public/dist
 
 ### https://raw.github.com/github/gitignore/379476851036fbc638d258f0547d91c2a3765a33/Laravel.gitignore
 
