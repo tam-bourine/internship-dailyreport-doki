@@ -6,10 +6,11 @@
         <p
           class="index__description"
         >Qiitaは、エンジニアリングに関する知識を記録・共有するためのサービスです。コードを書いていて気づいたことや、自分がハマったあの仕様について、他のエンジニアと知見を共有しましょう ;)</p>
+          <button :click="request()"></button>
       </div>
       <div class="index__right">
         <!-- Login components -->
-        <p>{{this.$auth.user.name}}</p>
+<!--        <p>{{this.$auth.user.name}}</p>-->
         <p>test</p>
       </div>
     </div>
@@ -31,7 +32,11 @@ export default {
     render() {
       console.log(this.$md.render(this.model));
       return this.$md.render(this.model);
-    }
+    },
+      request: async function () {
+        let d = await this.$axios.get('users');
+        console.log(d);
+      }
   }
 };
 </script>

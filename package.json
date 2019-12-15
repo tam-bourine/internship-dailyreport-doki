@@ -1,24 +1,29 @@
 {
+    "name": "daily-report-intern",
+    "description": "tambourine internship daily report app / laravel, nuxt",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
-    },
-    "devDependencies": {
-        "axios": "^0.19",
-        "cross-env": "^5.1",
-        "laravel-mix": "^4.0.7",
-        "lodash": "^4.17.13",
-        "resolve-url-loader": "^2.3.1",
-        "sass": "^1.15.2",
-        "sass-loader": "^7.1.0"
+        "dev": "node -r dotenv/config ./node_modules/@nuxt/cli/bin/nuxt-cli.js --port 3313",
+        "build": "nuxt build",
+        "start": "nuxt start"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.25",
+        "@fortawesome/free-solid-svg-icons": "^5.11.2",
+        "@fortawesome/vue-fontawesome": "^0.1.8",
+        "@nuxtjs/auth": "^4.8.4",
+        "@nuxtjs/axios": "^5.3.6",
+        "@nuxtjs/markdownit": "^1.2.7",
+        "dotenv": "^8.2.0",
+        "highlight.js": "^9.16.2",
+        "json-server": "^0.15.1",
+        "markdown-it-toc": "^1.1.0",
+        "markdown-it-vue": "^1.0.11",
+        "node-sass": "^4.13.0",
+        "nuxt": "^2.0.0",
+        "nuxt-fontawesome": "^0.4.0",
+        "sass-loader": "^8.0.0",
         "serialize-javascript": "^2.1.2"
     }
 }

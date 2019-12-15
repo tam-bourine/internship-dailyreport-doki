@@ -23,12 +23,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ## Docker Setup
 
-move project root.
-
-```bash
-$ cd internship-dailyreport-doki/daily-report-tambourine-backend
-```
-
 copy .env
 
 ```bash
@@ -74,6 +68,14 @@ $ composer install
 # generate application key
 $ php artisan key:generate
 ```
+
+database migration (with seeds)
+
+```bash
+# in php container (after execution docker-compose exec php bash)
+$ php artisan migrate --seed
+```
+
 ## API DOCUMENT
 
 ### USERS
