@@ -18,7 +18,8 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $post = new Post;
-        $post->user_id = $request->user_id;
+        $user = User::where('name', $request->name);
+        $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
     }
@@ -27,7 +28,15 @@ class PostController extends Controller
     {
         $current_user = User::find($id);
         $posts = Post::where('user_id', $current_user->id)->get();
-        return $posts;
+        //return $posts;
+        return response()->json([
+            "id" => $posts->id,
+            "user_id" => $posts->user_id,
+            'user_name' => $current_user->name,
+            "body" => $posts->body,
+            "created_at" => $posts->created_at,
+            "updated_at" => $posts->updated_at,
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -41,6 +50,5 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $post->delete();
-        return redirect('api/posts');
     }
 }
