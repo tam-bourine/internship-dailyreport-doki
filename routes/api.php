@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\PostController;
+use App¥Http¥Controllers¥Api¥LoginController;
 use Illuminate\Support\Str;
 
 /*
@@ -19,10 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' =>['api:auth']], function(){
+Route::group(['middleware' =>['api']], function(){
     Route::resource('posts', 'Api\PostController', ['except' => ['create', 'edit']]);
 });
 
 Route::group(['middleware' =>['auth:api']], function(){
     Route::resource('users', 'Api\UserController', ['except' => ['create', 'edit']]);
 });
+
+Route::middleware('auth:api')->get('/login', 'LoginController@login');

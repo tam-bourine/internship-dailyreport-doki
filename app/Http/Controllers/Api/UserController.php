@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -20,11 +21,10 @@ class UserController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->email_verified_at = $request->email_verified_at;
-        $user->password = $request->password;
-        $user->remember_token = $request->remember_token;
+        $user->password = Hash::make($request->password);
         $user->api_token = Str::random(80);
         $user->save();
+        return $user->api_token;
     }
 
     public function show($id)
@@ -36,9 +36,10 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-        $user->body = $request->body;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
         $user->save();
-        return redirect('api/users'.$id);
     }
 
     public function destroy($id)
