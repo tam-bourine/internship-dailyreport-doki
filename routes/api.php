@@ -28,4 +28,4 @@ Route::group(['middleware' =>['auth:api']], function(){
     Route::resource('users', 'Api\UserController', ['except' => ['create', 'edit']]);
 });
 
-Route::middleware('auth:api')->post('/login', 'LoginController@login');
+Route::middleware('api')->post('/login', 'LoginController@login');
