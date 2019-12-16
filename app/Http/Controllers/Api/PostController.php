@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with('user')->get();
         return $posts;
     }
 
@@ -26,17 +26,8 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $current_user = User::find($id);
-        $posts = Post::where('user_id', $current_user->id)->get();
-        //return $posts;
-        return response()->json([
-            "id" => $posts->id,
-            "user_id" => $posts->user_id,
-            'user_name' => $current_user->name,
-            "body" => $posts->body,
-            "created_at" => $posts->created_at,
-            "updated_at" => $posts->updated_at,
-        ]);
+        $posts = Post::with('user')->where('user_id', $id)->get();
+        return $posts;
     }
 
     public function update(Request $request, $id)
