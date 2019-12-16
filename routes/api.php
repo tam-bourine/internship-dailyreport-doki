@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\PostController;
-use App¥Http¥Controllers¥Api¥LoginController;
+use App\Http\Controllers\Api\LoginController;
 use Illuminate\Support\Str;
 
 /*
