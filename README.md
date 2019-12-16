@@ -8,15 +8,11 @@
 # install dependencies
 $ npm run install
 
-# serve with hot reload at localhost:3000
+# serve with hot reload at localhost:3313
 $ npm run dev
 
-# build for production and launch server
+# build for production
 $ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
@@ -28,21 +24,6 @@ copy .env
 ```bash
 # copy
 $ cp .env.example .env
-
-$ vi .env
-```
-
-edit .env
-
-```.env
-APP_NAME=daily-report-tambourine-backend
-
-DB_CONNECTION=pgsql
-DB_HOST=postgres
-DB_PORT=5432
-DB_DATABASE=local_database
-DB_USERNAME=root
-DB_PASSWORD=
 ```
 
 create volume

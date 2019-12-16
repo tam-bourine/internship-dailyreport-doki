@@ -1,4 +1,4 @@
-export default {
+const config = {
     mode: 'spa',
     srcDir: 'client/',
     /*
@@ -56,14 +56,6 @@ export default {
         'nuxt-fontawesome',
         '@nuxtjs/auth'
     ],
-    /*
-     ** Axios module configuration
-     ** See https://axios.nuxtjs.org/options
-     */
-    axios: {
-        proxy: true
-    },
-
 
     auth: {
 
@@ -114,7 +106,6 @@ export default {
         }
     },
 
-
     /*
      ** Build configuration
      */
@@ -149,4 +140,20 @@ export default {
             'markdown-it-toc'
         ]
     }
+};
+
+if (process.env.APP_ENV === 'local') {
+    /*
+     ** Axios module configuration
+     ** See https://axios.nuxtjs.org/options
+     */
+    config.axios = {
+        proxy: true
+    };
+
+    config.proxy = {
+        '/api/': process.env.APP_URL
+    };
 }
+
+export default config;

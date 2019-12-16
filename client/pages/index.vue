@@ -32,11 +32,7 @@ export default {
     render() {
       console.log(this.$md.render(this.model));
       return this.$md.render(this.model);
-    },
-      request: async function () {
-        let d = await this.$axios.get('users');
-        console.log(d);
-      }
+    }
   }
 };
 </script>
