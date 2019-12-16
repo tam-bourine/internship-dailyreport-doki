@@ -99,7 +99,7 @@ $ php artisan migrate --seed
     "password" : "password"
 }
 ```
-### Response
+#### Response
 ```javascript
 {api_token}
 ```
@@ -119,7 +119,6 @@ $ php artisan migrate --seed
 ユーザー情報の削除  
 
 ### POSTS
-
 
 **GET** api/posts  
 全投稿を返す  
@@ -188,3 +187,19 @@ $ php artisan migrate --seed
 
 **DELETE** api/posts/{post_id}  
 投稿を削除  
+
+### Login
+
+***POST*** api/login
+emailとpasswordでログインして、トークンを生成し直し渡す  
+#### Request
+```javascript
+{
+    "email" : "email@example.com",
+    "password" : "password"
+}
+```
+#### Response
+```javascript
+{api_token}
+```
