@@ -30,4 +30,5 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
-
+#IDE
+.idea
