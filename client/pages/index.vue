@@ -9,7 +9,7 @@
       </div>
       <div class="index__right">
         <!-- Login components -->
-        <p>{{this.$auth.user.name}}</p>
+<!--        <p>{{this.$auth.user.name}}</p>-->
         <p>test</p>
       </div>
     </div>
