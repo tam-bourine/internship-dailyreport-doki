@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -33,19 +34,27 @@ class UserController extends Controller
         return $user;
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->save();
+        $token = $request->bearerToken();
+        if ($user->api_token === $token) {
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = $request->password;
+            $user->save();
+        } else {
+            throw new AuthorizationException('you are not allowed to update');
+        }
+
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, User $user)
     {
-        $user = User::find($id);
-        $user->delete();
-        return redirect('api/users');
+        $token = $request->bearerToken();
+        if ($user->api_token === $token) {
+            $user->delete();
+        } else {
+            throw new AuthorizationException('you are not allowed to delete');
+        }
     }
 }
