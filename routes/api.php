@@ -26,6 +26,6 @@ Route::group(['middleware' =>['auth:api']], function(){
     Route::resource('users', 'Api\UserController', ['except' => ['create', 'edit', 'store', 'show']]);
 });
 
-Route::middleware('api')->post('/login', 'LoginController@login');
+Route::middleware('api')->post('login', 'Api\LoginController@login');
 
 Route::middleware('api')->post('users', 'Api\UserController@store');
