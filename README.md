@@ -76,7 +76,7 @@ $ php artisan migrate --seed
     ...
  }]
 ```
-**GET** api/users/{id}  
+**GET** api/user  
 ユーザーを返す  
 #### Response
 ```javascript
