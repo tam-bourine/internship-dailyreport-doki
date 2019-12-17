@@ -6,9 +6,15 @@ use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    public function __construct(){
+        $this->middleware('can:update,post')->only("update");
+        $this->middleware('can:delete,post')->only('destroy');
+    }
+
     public function index()
     {
         $posts = Post::with('user')->get();
@@ -22,6 +28,7 @@ class PostController extends Controller
         $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
+        return [];
     }
 
     public function show($id)
@@ -30,16 +37,15 @@ class PostController extends Controller
         return $posts;
     }
 
-    public function update(Request $request, $id)
+    public function update(Post $post)
     {
-        $post = Post::find($id);
-        $post->body = $request->body;
+//        var_dump(request()->route("post"));exit;
+        $post->body = request()->body;
         $post->save();
     }
 
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::find($id);
         $post->delete();
     }
 }

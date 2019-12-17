@@ -23,6 +23,7 @@ class PostPolicy
 
     public function update(User $user, Post $post)
     {
+        logger("check auth");
          if ($user->id === $post->user_id) {
              return true;
          } else {
