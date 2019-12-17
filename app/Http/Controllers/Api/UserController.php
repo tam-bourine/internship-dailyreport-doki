@@ -28,16 +28,17 @@ class UserController extends Controller
         return $user->api_token;
     }
 
-    public function show($id)
+    public function show(Request $request)
     {
-        $user = User::find($id);
+        $token = $request->bearerToken();
+        $user = User::where('api_token', $token)->first();
         return $user;
     }
 
     public function update(Request $request, User $user)
     {
         $token = $request->bearerToken();
-        if ($user->api_token === $token) {
+        if ($user->api_token == $token) {
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = $request->password;
@@ -51,7 +52,7 @@ class UserController extends Controller
     public function destroy(Request $request, User $user)
     {
         $token = $request->bearerToken();
-        if ($user->api_token === $token) {
+        if ($user->api_token == $token) {
             $user->delete();
         } else {
             throw new AuthorizationException('you are not allowed to delete');

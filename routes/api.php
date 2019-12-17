@@ -16,16 +16,14 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get('/user', 'Api\UserController@show');
 
 Route::group(['middleware' =>['auth:api']], function(){
     Route::resource('posts', 'Api\PostController', ['except' => ['create', 'edit']]);
 });
 
 Route::group(['middleware' =>['auth:api']], function(){
-    Route::resource('users', 'Api\UserController', ['except' => ['create', 'edit', 'store']]);
+    Route::resource('users', 'Api\UserController', ['except' => ['create', 'edit', 'store', 'show']]);
 });
 
 Route::middleware('api')->post('/login', 'LoginController@login');
