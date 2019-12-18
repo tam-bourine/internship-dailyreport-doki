@@ -39,7 +39,6 @@ class PostController extends Controller
 
     public function update(Post $post)
     {
-//        var_dump(request()->route("post"));exit;
         $post->body = request()->body;
         $post->save();
     }
