@@ -4,11 +4,24 @@
       <div class="nippo__user">
         <img src="../assets/img/nippo__icon.svg" alt="user-icon" class="nippo__user-icon" />
       </div>
-
       <div class="nippo__content">
         <div class="nippo__info">
-          <a class="nippo__user-link">{{this.author}}</a>
-          <time style="color:#b8b8b8">{{this.time}}</time>
+          <div class="nippo__infos">
+            <nuxt-link
+              :to="{name: 'user-user', params: {user:author} }"
+              class="nippo__user-link"
+            >manaki</nuxt-link>
+            <nuxt-link class="nippo__user-link" to="this.auhor">{{this.author}}</nuxt-link>
+            <time style="color:#b8b8b8">{{this.time}}</time>
+          </div>
+          <div class="nippo__change">
+            <a href class="nippo__btn btn--edit" 　@click.prevent="editPost()">
+              <font-awesome-icon icon="edit" class="nippo__btn-icon"></font-awesome-icon>
+            </a>
+            <a href class="nippo__btn btn--delete">
+              <font-awesome-icon icon="trash" class="nippo__btn-icon"></font-awesome-icon>
+            </a>
+          </div>
         </div>
         <MarkdownItVue class="md-body nippo__article" :content="this.script" />
         <div class="nippo__tags">
@@ -36,6 +49,18 @@ export default {
 
   data() {
     return {};
+  },
+
+  computed() {},
+  methods: {
+    editPost() {
+      this.$store.commit("setDraft", this.script);
+      this.$router.push("editor");
+    },
+
+    async deletePost() {
+      const res = await this.$axios.delete("/posts/" + author);
+    }
   }
 };
 </script>
@@ -79,6 +104,9 @@ export default {
   }
 
   &__user-link {
+    text-decoration: none;
+    color: #24292d;
+    font-weight: bold;
     &:hover {
       transition: 0.3s;
       color: #337ab7;
@@ -107,6 +135,49 @@ export default {
       text-decoration: underline;
     }
   }
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__btn {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    display: block;
+    margin-right: 8px;
+    padding: 5px 5px;
+    line-height: 2;
+    font-size: 12px;
+    width: 56px;
+
+    &:hover {
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+
+    &:nth-child(2) {
+      margin-right: 0;
+    }
+
+    &-icon {
+      font-size: 15px;
+    }
+  }
+
+  &__change {
+    display: flex;
+  }
+}
+
+.btn--edit {
+  background-color: #65c97a;
+}
+.btn--delete {
+  background-color: #d75946;
 }
 
 .md-body {

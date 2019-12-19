@@ -5,6 +5,10 @@
         <h2 class="form__title">ようこそ！(^o^)</h2>
         <div class="form__inputs">
           <div class="form__input-box">
+            <div class="form__input-box">
+              <input id="name" class="form__input" v-model="name" placeholder="名前" type="email" />
+            </div>
+
             <input
               id="emial"
               class="form__input"
@@ -36,58 +40,38 @@
 
 <script>
 export default {
-  middleware({ store, redirect }) {
-    if (store.$auth.loggedIn) {
-      redirect("/success");
-    }
-  },
-
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      name: ""
     };
   },
   methods: {
     /* Create User Account  */
     async submitForm() {
-      const token = await this.$axios.post(
-        "https://tango-dojo-api.herokuapp.com/api/login",
-        {
-          userInfo: {
-            email: this.email,
-            password: this.password
-          }
-        }
-      );
-      console.log(token, "this is token");
-      // this.$state.dispatch('')
-    },
-
-    async loginTest() {
-      const { test } = await this.$auth.loginWith("local", {
-        data: {
-          email: this.email,
-          password: this.password
-        }
+      const token = await this.$axios.post("/users", {
+        email: this.email,
+        password: this.password,
+        name: this.name
       });
+      this.login();
+      //      this.$axios.setToken(token.data, "Bearer");
+      //const userData = await this.$axios.get("/user");
     },
 
     async login() {
       try {
         await this.$auth.loginWith("local", {
           data: {
-            userInfo: {
-              email: this.email,
-              password: this.password
-            }
+            email: this.email,
+            password: this.password,
+            name: this.name
           }
         });
       } catch (error) {
         console.log(error);
       }
-
-      alert("executed login");
     }
   }
 };

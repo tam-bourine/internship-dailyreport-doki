@@ -7,7 +7,6 @@
         v-model="tag"
         placeholder="報告の内容に関連するタグをスペース区切りで3つまで入力(例: Html CSS Javascript"
       />
-
       <div class="editor__content">
         <div
           class="editor__script"
@@ -56,7 +55,7 @@
             rows="10"
             placeholder="今日の日報をMarkdown記法で書いて共有しよう
 
-<見出し>           
+<見出し>
 # 見出し 1
 ## 見出し 2
 ### 見出し 3
@@ -81,7 +80,7 @@ console.log(welcome);
           ></textarea>
         </div>
 
-        <!-- 
+        <!--
         -->
         <!-- End of editor script -->
         <div
@@ -197,17 +196,24 @@ export default {
       alert(res);
     },
 
-    async testDraft() {
-      let time = new Date().toLocaleString();
-      const res = await this.$axios.post("http://localhost:5000/markdown", {
-        draft: {
-          time: time,
-          script: this.script,
-          tag: this.tag,
-          author: this.user.name
-        }
+    async postDraftLocal() {
+      const test = await this.$axios.get("/users");
+      /*
+
+      const res = await this.$axios.post("/posts", {
+          user_id: "123",
+        body: this.script
       });
       alert(res);
+  */
+      console.log(test);
+    },
+
+    async testDraft() {
+      const res = await this.$axios.post("/posts", {
+        body: this.script,
+        user_id: 54
+      });
     },
     async getDraft() {
       const res = await this.$axios.get(
@@ -231,6 +237,9 @@ export default {
     scaleRight() {
       this.rightScale = !this.rightScale;
     }
+  },
+  created: function() {
+    this.script = this.$store.getters.getDraft;
   }
 };
 </script>
@@ -307,6 +316,7 @@ a:hover {
 
   &__preview {
     width: 50%;
+    padding-bottom: 40px;
     position: relative;
   }
 
