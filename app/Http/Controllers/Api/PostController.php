@@ -24,11 +24,11 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $post = new Post;
-        $user = User::where('name', $request->name);
+        $user = User::where('name', $request->name)->first();
         $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
-        return [];
+        return "succeed";
     }
 
     public function show($id)
