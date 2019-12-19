@@ -171,7 +171,7 @@ $ php artisan migrate --seed
 #### Request
 ```javascript
 {
-    "user_id" : {user_id},
+    "name" : {user_name},
     "body" : "text",
 }
 ```
