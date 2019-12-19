@@ -16,7 +16,7 @@ class LoginController extends Controller
         $password = $request->password;
         $user = User::where("email", $email)->first();
         if ($user && Hash::check($password, $user->password)) {
-            $api_token = Str::random();
+            $api_token = Str::random(80);
             $user->api_token = $api_token;
             $user->save();
             return $api_token;
