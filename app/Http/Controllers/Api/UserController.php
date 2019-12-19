@@ -8,6 +8,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -19,6 +21,18 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:users|max:30',
+            'email' => 'required|unique:users|email',
+            'password' => 'required|max:100|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -39,6 +53,25 @@ class UserController extends Controller
     {
         $token = $request->bearerToken();
         if ($user->api_token == $token) {
+            $validator = Validator::make($request->all(), [
+                'name' => [
+                    'required',
+                    'max:30',
+                    Rule::unique('users')->ignore($user->id),
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users')->ignore($user->id),
+                ],
+                'password' => 'required|max:100|min:8',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => $validator->errors()
+                ], 400);
+            }
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = $request->password;
