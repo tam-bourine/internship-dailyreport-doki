@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', 'Api\UserController@show');
+Route::middleware('auth:api')->get('/user', 'Api\UserController@show');
 
 Route::group(['middleware' =>['auth:api']], function(){
     Route::resource('posts', 'Api\PostController', ['except' => ['create', 'edit']]);
