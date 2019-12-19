@@ -3,15 +3,28 @@
     <div class="home__wrapper">
       <div class="home__left">
         <ul class="home__sort">
-          <li class="home__sort-list active">
+          <li
+            class="home__sort-list"
+            :class="{active: listActive[0]}"
+            @click.prevent="sortByLatest(); switchActiveList(0)"
+          >
             <font-awesome-icon icon="calendar-check" class="home__list-icon"></font-awesome-icon>投稿日順
           </li>
 
-          <li class="home__sort-list">
+          <li
+            class="home__sort-list"
+            :class="{active:listActive[1]}"
+            　@click.prevent="sortByUpdated(); switchActiveList(1)"
+            　
+          >
             <font-awesome-icon icon="edit" class="home__list-icon"></font-awesome-icon>更新日順
           </li>
-          <li class="home__sort-list">
-            <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>閲覧数順
+          <li
+            class="home__sort-list"
+            :class="{active:listActive[2]}"
+            @click.prevent="sortByOldest(); switchActiveList(2)"
+          >
+            <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>古い物順
           </li>
         </ul>
       </div>
@@ -19,11 +32,11 @@
       <div class="home__center">
         <Nippo
           class="home__card"
-          v-for="nippo in articles"
-          v-bind:key="nippo.date"
-          :time="nippo.time"
-          :script="nippo.script"
-          :author="nippo.author"
+          v-for="nippo in this.articles"
+          v-bind:key="nippo.id"
+          :time="nippo.created_at"
+          :script="nippo.body"
+          :author="nippo.user_id"
         />
       </div>
 
@@ -38,7 +51,7 @@
           <div class="home__profile-info">
             <img class="home__logo" src="../assets/img/nippo__icon.svg" alt="profile-icon" />
             <a class="home__name">
-              まなきんぐ
+              manaki/ikeda
               <br />
               <pre class="home__id">@manaki</pre>
             </a>
@@ -74,14 +87,42 @@ export default {
   data() {
     return {
       user: true,
-      articles: []
+      articles: [],
+      listActive: [true, false, false]
     };
   },
 
   created: async function() {
     //if not logged in send user to login form or singup
-    let draftData = await this.$axios.get("http://localhost:5000/getDraft");
+    let draftData = await this.$axios.get("/posts");
     this.articles = draftData.data;
+    console.log(this.articles);
+    this.articles = this.sortByLatest();
+  },
+
+  methods: {
+    sortByLatest() {
+      return this.articles.sort((a, b) => {
+        return a.date < b.date ? 1 : -1;
+      });
+    },
+
+    sortByUpdated() {
+      return this.articles.sort((a, b) => {
+        return a.updated_at < b.updated_at ? 1 : -1;
+      });
+    },
+
+    sortByOldest() {
+      return this.articles.sort((a, b) => {
+        return a.date > b.date ? 1 : -1;
+      });
+    },
+
+    switchActiveList(listIndex) {
+      this.listActive = [false, false, false];
+      this.listActive[listIndex] = true;
+    }
   }
 };
 </script>
@@ -142,6 +183,7 @@ body {
     list-style: none;
     padding: 10px 40px;
     font-size: 12px;
+    cursor: pointer;
     margin-top: 8px;
 
     &:hover {
@@ -226,6 +268,7 @@ body {
 .active {
   background-color: #5679e8;
   color: #fff;
+  pointer-events: none;
   &:hover {
     background-color: #33488b;
   }

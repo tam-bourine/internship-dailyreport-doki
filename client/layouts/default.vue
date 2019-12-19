@@ -60,6 +60,18 @@ import Header from "@/components/Header.vue";
 export default {
   components: {
     Header
+  },
+  head() {
+    return {
+      title: "株式会社タンバリン日報 | tambourine inc daily report.",
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: "株式会社タンバリン用日報投稿ウェブサイト"
+        }
+      ]
+    };
   }
 };
 </script>

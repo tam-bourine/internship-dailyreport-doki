@@ -4,33 +4,44 @@
       <div class="user__left">
         <img src="../../assets/img/nippo__icon.svg" alt class="user__img" />
         <h2 class="user__name">{{this.articles.author}}manaki ikeda</h2>
-        <p class="user__description">文学部専攻の大学3回生です</p>
-      </div>
-
-      <div class="user__center">
-        <ul class="home__sort">
-          <li class="home__sort-list active">
-            <font-awesome-icon icon="calendar-check" class="home__list-icon"></font-awesome-icon>投稿日順
-          </li>
-
-          <li class="home__sort-list">
-            <font-awesome-icon icon="edit" class="home__list-icon"></font-awesome-icon>更新日順
-          </li>
-          <li class="home__sort-list">
-            <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>閲覧数順
-          </li>
-        </ul>
+        <p class="user__description">たい焼きを食べるのが大好きな大学生です。</p>
       </div>
 
       <div class="user__right">
         <Nippo
           class="user__card"
           v-for="nippo in articles"
-          :key="nippo.date"
-          :time="nippo.time"
-          :author="nippo.author"
-          :script="nippo.script"
+          :key="nippo.id"
+          :time="nippo.created_at"
+          :script="nippo.body"
         />
+      </div>
+      <div class="user__center">
+        <ul class="home__sort">
+          <li
+            class="home__sort-list"
+            :class="{active: listActive[0]}"
+            @click.prevent="sortByLatest(); switchActiveList(0)"
+          >
+            <font-awesome-icon icon="calendar-check" class="home__list-icon"></font-awesome-icon>投稿日順
+          </li>
+
+          <li
+            class="home__sort-list"
+            :class="{active:listActive[1]}"
+            　@click.prevent="sortByUpdated(); switchActiveList(1)"
+            　
+          >
+            <font-awesome-icon icon="edit" class="home__list-icon"></font-awesome-icon>更新日順
+          </li>
+          <li
+            class="home__sort-list"
+            :class="{active:listActive[2]}"
+            @click.prevent="sortByOldest(); switchActiveList(2)"
+          >
+            <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>古い物順
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -44,20 +55,47 @@ export default {
   },
 
   created: async function() {
-    let userPost = await this.$axios.get(
-      "http://localhost:5000/api/posts/" + this.$route.params.user
-    );
+    let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
     this.articles = userPost.data;
+    this.articles = this.sortByLatest();
+
+    //ログインユーザのページが開かれている場合
+    this.admin = true;
   },
   data() {
     return {
       root: this.$route.params.user,
       articles: [],
-      name: "manaki"
+      name: "manaki",
+      listActive: [true, false, false],
+      admin: false
     };
   },
 
-  methods: {}
+  methods: {
+    sortByLatest() {
+      return this.articles.sort((a, b) => {
+        return a.date < b.date ? 1 : -1;
+      });
+    },
+
+    sortByUpdated() {
+      return this.articles.sort((a, b) => {
+        return a.updated_at < b.updated_at ? 1 : -1;
+      });
+    },
+
+    sortByOldest() {
+      return this.articles.sort((a, b) => {
+        return a.date > b.date ? 1 : -1;
+      });
+    },
+
+    switchActiveList(listIndex) {
+      this.listActive = [false, false, false];
+      this.listActive[listIndex] = true;
+    }
+  }
 };
 </script>
 
@@ -68,7 +106,7 @@ export default {
     max-width: 1040px;
     margin: 0 auto;
     display: flex;
-    padding-top: 77px;
+    padding: 77px 0;
   }
   &__left {
     width: 30%;
@@ -88,12 +126,21 @@ export default {
   &__description {
     font-size: 14px;
     margin-top: 8px;
+    text-align: left;
+    line-height: 1.3;
   }
 
   &__name {
     margin-top: 16px;
     font-size: 24px;
     font-weight: 300;
+  }
+
+  &__card {
+    margin-top: 16px;
+    &:nth-child(1) {
+      margin-top: 0;
+    }
   }
 }
 

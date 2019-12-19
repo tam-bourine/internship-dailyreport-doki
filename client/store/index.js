@@ -1,15 +1,31 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+export const state = () => ({
+    draft: ''
+});
 
-Vue.use(Vuex);
+//mutations to change value in state.
+export const mutations = {
 
-export const store = new Vuex.Store({
-    state: {
+    //push word to words list
+    setDraft(state, payload) {
 
-        draft: ""
+        state.draft = payload;
 
     },
 
 
 
-});
+}
+
+//getters to get value from store.
+export const getters = {
+
+    getDraft(state) {
+        return state.draft;
+    }
+
+}
+
+
+export const actions = {
+
+}

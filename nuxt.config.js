@@ -7,8 +7,8 @@ const config = {
     head: {
         title: process.env.npm_package_name || '',
         meta: [{
-            charset: 'utf-8'
-        },
+                charset: 'utf-8'
+            },
             {
                 name: 'viewport',
                 content: 'width=device-width, initial-scale=1'
@@ -75,33 +75,27 @@ const config = {
                 endpoints: {
 
                     login: {
-                        url: 'http://localhost:5000/api/auth/login',
+                        url: '/login',
                         method: "post",
-                        propertyName: 'token'
+                        propertyName: false
                     },
-
-                    logout: {
-                        url: 'http://localhost:5000/api/auth/logout',
-                        method: false
-                    },
-
                     user: {
-                        url: 'http://localhost:5000/api/auth/user',
+                        url: '/user',
                         method: 'get',
                         propertyName: false
                     },
-
-                    tokenRequired: true,
-                    tokenType: 'Bearer'
-
+                    logout: {
+                        url: '/logout',
+                        method: 'post'
+                    }
 
                 }
 
 
             },
-            tokenRequired: false,
-            tokenType: false
 
+            tokenRequired: true,
+            tokenType: 'bearer'
 
         }
     },
@@ -113,8 +107,7 @@ const config = {
         /*
          ** You can extend webpack config here
          */
-        extend(config, ctx) {
-        }
+        extend(config, ctx) {}
     },
 
     generate: {
