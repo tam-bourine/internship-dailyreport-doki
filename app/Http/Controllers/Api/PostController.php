@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -23,6 +24,17 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'body' => 'required|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
         $post = new Post;
         $user = User::where('name', $request->name)->first();
         $post->user_id = $user->id;
@@ -37,14 +49,26 @@ class PostController extends Controller
         return $posts;
     }
 
-    public function update(Post $post)
+    public function update(Request $request, Post $post)
     {
+        $validator = Validator::make($request->all(), [
+            'body' => 'required|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
         $post->body = request()->body;
         $post->save();
+        return "succeed";
     }
 
     public function destroy(Post $post)
     {
         $post->delete();
+        return "succeed";
     }
 }
