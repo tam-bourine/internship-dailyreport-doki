@@ -1,5 +1,5 @@
 export const state = () => ({
-    draft: ''
+    draft: ""
 });
 
 //mutations to change value in state.

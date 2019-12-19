@@ -40,9 +40,9 @@ export default {
   },
 
   created: async function() {
-    let userData = await this.$axios.get("/user");
+    let userData = await this.$axios.get("/users");
     this.userList = userData.data;
-    console.log(userData);
+    console.log(this.userList);
   },
 
   computed: {

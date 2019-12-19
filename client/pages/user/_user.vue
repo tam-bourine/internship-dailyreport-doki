@@ -58,7 +58,6 @@ export default {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
     this.articles = userPost.data;
     this.articles = this.sortByLatest();
-
     //ログインユーザのページが開かれている場合
     this.admin = true;
   },

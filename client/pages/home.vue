@@ -31,12 +31,15 @@
 
       <div class="home__center">
         <Nippo
+          @update="updateList"
           class="home__card"
           v-for="nippo in this.articles"
           v-bind:key="nippo.id"
           :time="nippo.created_at"
           :script="nippo.body"
-          :author="nippo.user_id"
+          :author="nippo.user.name"
+          :id="nippo.user_id"
+          :articleId="nippo.id"
         />
       </div>
 
@@ -51,9 +54,9 @@
           <div class="home__profile-info">
             <img class="home__logo" src="../assets/img/nippo__icon.svg" alt="profile-icon" />
             <a class="home__name">
-              manaki/ikeda
+              {{this.$auth.user.name}}
               <br />
-              <pre class="home__id">@manaki</pre>
+              <pre class="home__id">@tambourine</pre>
             </a>
           </div>
           <div class="home__boxes">
@@ -93,17 +96,14 @@ export default {
   },
 
   created: async function() {
+    this.updateList();
     //if not logged in send user to login form or singup
-    let draftData = await this.$axios.get("/posts");
-    this.articles = draftData.data;
-    console.log(this.articles);
-    this.articles = this.sortByLatest();
   },
 
   methods: {
     sortByLatest() {
       return this.articles.sort((a, b) => {
-        return a.date < b.date ? 1 : -1;
+        return a.created_at < b.created_at ? 1 : -1;
       });
     },
 
@@ -115,13 +115,24 @@ export default {
 
     sortByOldest() {
       return this.articles.sort((a, b) => {
-        return a.date > b.date ? 1 : -1;
+        return a.created_at > b.created_at ? 1 : -1;
       });
     },
 
     switchActiveList(listIndex) {
       this.listActive = [false, false, false];
       this.listActive[listIndex] = true;
+    },
+
+    async updateList() {
+      let draftData = await this.$axios.get("/posts");
+      this.articles = draftData.data;
+
+      this.articles = this.sortByLatest();
+    },
+
+    callParent() {
+      alert("working emit");
     }
   }
 };

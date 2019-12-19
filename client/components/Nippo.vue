@@ -8,17 +8,16 @@
         <div class="nippo__info">
           <div class="nippo__infos">
             <nuxt-link
-              :to="{name: 'user-user', params: {user:author} }"
+              :to="{name: 'user-user', params: {user:this.id} }"
               class="nippo__user-link"
-            >manaki</nuxt-link>
-            <nuxt-link class="nippo__user-link" to="this.auhor">{{this.author}}</nuxt-link>
+            >{{this.author}}</nuxt-link>
             <time style="color:#b8b8b8">{{this.time}}</time>
           </div>
-          <div class="nippo__change">
-            <a href class="nippo__btn btn--edit" 　@click.prevent="editPost()">
+          <div class="nippo__change" v-if="admin">
+            <a href class="nippo__btn btn--edit" @click.prevent="editPost()">
               <font-awesome-icon icon="edit" class="nippo__btn-icon"></font-awesome-icon>
             </a>
-            <a href class="nippo__btn btn--delete">
+            <a href class="nippo__btn btn--delete" @click.prevent="deletePost()">
               <font-awesome-icon icon="trash" class="nippo__btn-icon"></font-awesome-icon>
             </a>
           </div>
@@ -44,23 +43,25 @@ export default {
   components: {
     MarkdownItVue
   },
-
-  props: ["author", "date", "script", "time", "title"],
-
+  props: ["author", "date", "script", "time", "title", "id", "articleId"],
   data() {
-    return {};
+    return {
+      admin: false
+    };
   },
-
-  computed() {},
   methods: {
     editPost() {
       this.$store.commit("setDraft", this.script);
       this.$router.push("editor");
     },
-
     async deletePost() {
-      const res = await this.$axios.delete("/posts/" + author);
+      const res = await this.$axios.delete("/posts/" + this.articleId);
+      this.$emit("update");
     }
+  },
+  created: function() {
+    if (this.$auth.user.id == this.id) this.admin = true;
+    this.$emit("callParent");
   }
 };
 </script>
@@ -87,7 +88,7 @@ export default {
     }
   }
   &__content {
-    width: 80%;
+    width: 90%;
     padding: 8px;
   }
 

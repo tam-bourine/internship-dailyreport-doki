@@ -13,7 +13,6 @@
       </div>
 
       <div class="header__box">
-        <a class="header__link">ストック一覧</a>
         <nuxt-link to="/editor" class="header__btn">
           <font-awesome-icon style="margin-right:8px" icon="edit" />投稿する
         </nuxt-link>
@@ -73,6 +72,9 @@ export default {
     logout() {
       this.$auth.logout();
     }
+  },
+  beforeRouteLeave() {
+    this.clicked = false;
   }
 };
 </script>
