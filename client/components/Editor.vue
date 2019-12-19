@@ -103,10 +103,6 @@ console.log(welcome);
                 />
               </a>
             </div>
-            <!--      <div class="editor__bar-left">
-              <p class="editor__bar-title">本文</p>
-              <a class="editor__bar-link">良い記事を書くためには</a>
-            </div>-->
           </div>
           <div class="editor__helper" v-if="!this.script">
             <p class="editor__helper-text">
@@ -127,9 +123,9 @@ console.log(welcome);
           <font-awesome-icon icon="save" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き保存
         </a>
         <a class="editor__footer-btn" v-if="this.selected==1" @click.prevent="testDraft()">
-          <font-awesome-icon icon="download" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き読込
+          <font-awesome-icon icon="download" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を更新
         </a>
-        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="testDraft()">
+        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="postDraft()">
           <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿
         </a>
         <!-- v-if end -->
@@ -141,7 +137,7 @@ console.log(welcome);
                 <font-awesome-icon icon="save" class="editor__list-icon"></font-awesome-icon>下書き保存
               </li>
               <li class="editor__list" @click.prevent="selected =1">
-                <font-awesome-icon icon="download" class="editor__list-icon"></font-awesome-icon>下書き読込
+                <font-awesome-icon icon="download" class="editor__list-icon"></font-awesome-icon>日報を更新
               </li>
               <li class="editor__list active" @click.prevent="selected=2">
                 <font-awesome-icon icon="upload" class="editor__list-icon"></font-awesome-icon>日報を投稿
@@ -168,13 +164,12 @@ export default {
     return {
       script: "",
       tag: "",
-      user: {
-        name: "manaki"
-      },
+      user: this.$auth.user,
       showMenu: false,
       leftScale: false,
       rightScale: false,
-      selected: 2
+      selected: 0,
+      user: this.$auth.user
     };
   },
 
@@ -182,48 +177,10 @@ export default {
     /* Test Post request */
     async postDraft() {
       let time = new Date().toLocaleString();
-      const res = await this.$axios.post(
-        "https://tango-dojo-api.herokuapp.com/markdown",
-        {
-          draft: {
-            time: time,
-            script: this.script,
-            tag: this.tag,
-            author: this.user.name
-          }
-        }
-      );
-      alert(res);
-    },
-
-    async postDraftLocal() {
-      const test = await this.$axios.get("/users");
-      /*
-
       const res = await this.$axios.post("/posts", {
-          user_id: "123",
+        name: this.user.name,
         body: this.script
       });
-      alert(res);
-  */
-      console.log(test);
-    },
-
-    async testDraft() {
-      const res = await this.$axios.post("/posts", {
-        body: this.script,
-        user_id: 54
-      });
-    },
-    async getDraft() {
-      const res = await this.$axios.get(
-        "https://tango-dojo-api.herokuapp.com/getDraft"
-      );
-      this.script = res.data.script.text;
-    },
-
-    test() {
-      this.selected = 1;
     },
 
     toggleMenu() {
@@ -240,6 +197,9 @@ export default {
   },
   created: function() {
     this.script = this.$store.getters.getDraft;
+    if (this.$store.getters.getDraft != "") {
+      this.selected = 1;
+    }
   }
 };
 </script>

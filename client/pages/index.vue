@@ -10,6 +10,7 @@
       <div class="index__right">
         <!-- Login components -->
         <h2>is logged in {{this.$auth.loggedIn}}</h2>
+        <h2>username {{this.$auth.user.id}}</h2>
         <h2>username {{this.$auth.user.name}}</h2>
       </div>
     </div>
