@@ -34,9 +34,9 @@
               </nuxt-link>
             </li>
             <li class="header__dropdown-item">
-              <a href>
+              <nuxt-link to="/account">
                 <font-awesome-icon class="header__dropdown-icon" icon="cog"></font-awesome-icon>設定
-              </a>
+              </nuxt-link>
             </li>
             <li class="header__dropdown-item">
               <a href　@click.prevent="logout()">
@@ -199,8 +199,9 @@ export default {
 
     &:nth-child(1) {
       margin-top: 0;
-      padding: 12px;
+      padding: 12px 0;
       border-bottom: 1px solid #e5e5e5;
+
       &:hover {
         background-color: #fff;
         color: black;
