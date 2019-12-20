@@ -74,7 +74,7 @@ class UserController extends Controller
             }
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
             $user->save();
         } else {
             throw new AuthorizationException('you are not allowed to update');
