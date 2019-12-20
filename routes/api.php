@@ -29,3 +29,6 @@ Route::group(['middleware' =>['auth:api']], function(){
 Route::middleware('api')->post('login', 'Api\LoginController@login');
 
 Route::middleware('api')->post('users', 'Api\UserController@store');
+
+Route::middleware('api')->post('/posts/{post}/likes/{user_id}', 'LikesController@store');
+Route::middleware('api')->delete('/posts/{post}/likes/{user_id}', 'LikesController@destroy');
