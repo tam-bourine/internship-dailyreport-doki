@@ -59,7 +59,7 @@ $ php artisan migrate --seed
 
 ## API DOCUMENT
 
-### USERS
+### ユーザー情報
 
 **GET** api/users  
 全てのユーザーを返す  
@@ -118,7 +118,7 @@ $ php artisan migrate --seed
 **DELETE** api/users/{user_id}  
 ユーザー情報の削除  
 
-### POSTS
+### 投稿情報
 
 **GET** api/posts  
 全投稿を返す  
@@ -203,3 +203,11 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 ```javascript
 {api_token}
 ```
+
+### いいね
+
+**POST** api/posts/{post_id}/users/{user_id}
+いいねする
+
+**DELETE** api/posts/{post_id}/users/{user_id}
+いいね取り消し
