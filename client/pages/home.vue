@@ -3,27 +3,43 @@
     <div class="home__wrapper">
       <div class="home__left">
         <ul class="home__sort">
-          <li class="home__sort-list active">
+          <li
+            class="home__sort-list"
+            :class="{active: listActive[0]}"
+            @click.prevent="sortByLatest(); switchActiveList(0)"
+          >
             <font-awesome-icon icon="calendar-check" class="home__list-icon"></font-awesome-icon>投稿日順
           </li>
 
-          <li class="home__sort-list">
+          <li
+            class="home__sort-list"
+            :class="{active:listActive[1]}"
+            　@click.prevent="sortByUpdated(); switchActiveList(1)"
+            　
+          >
             <font-awesome-icon icon="edit" class="home__list-icon"></font-awesome-icon>更新日順
           </li>
-          <li class="home__sort-list">
-            <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>閲覧数順
+          <li
+            class="home__sort-list"
+            :class="{active:listActive[2]}"
+            @click.prevent="sortByOldest(); switchActiveList(2)"
+          >
+            <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>古い物順
           </li>
         </ul>
       </div>
 
       <div class="home__center">
         <Nippo
+          @update="updateList"
           class="home__card"
-          v-for="nippo in articles"
-          v-bind:key="nippo.date"
-          :time="nippo.time"
-          :script="nippo.script"
-          :author="nippo.author"
+          v-for="nippo in this.articles"
+          v-bind:key="nippo.id"
+          :time="nippo.created_at"
+          :script="nippo.body"
+          :author="nippo.user.name"
+          :id="nippo.user_id"
+          :articleId="nippo.id"
         />
       </div>
 
@@ -38,14 +54,17 @@
           <div class="home__profile-info">
             <img class="home__logo" src="../assets/img/nippo__icon.svg" alt="profile-icon" />
             <a class="home__name">
-              まなきんぐ
+              {{this.$auth.user.name}}
               <br />
-              <pre class="home__id">@manaki</pre>
+              <pre class="home__id">@tambourine</pre>
             </a>
           </div>
           <div class="home__boxes">
             <div class="home__box">
-              <a class="home__number">0</a>
+              <nuxt-link
+                class="home__number"
+                :to="{name:'user-user',params:{user:this.$auth.user.id}}"
+              >{{this.nippoAmount}}</nuxt-link>
               <p class="home__category">日報</p>
             </div>
             <div class="home__box">
@@ -74,14 +93,54 @@ export default {
   data() {
     return {
       user: true,
-      articles: []
+      articles: [],
+      listActive: [true, false, false],
+      nippoAmount: []
     };
   },
 
   created: async function() {
+    this.updateList();
+    const nippo = await this.$axios.get("/posts/" + this.$auth.user.id);
+    this.nippoAmount = nippo.data.length;
+    console.log("this is how many nippo you wrote", this.nippoAmount);
     //if not logged in send user to login form or singup
-    let draftData = await this.$axios.get("http://localhost:5000/getDraft");
-    this.articles = draftData.data;
+  },
+
+  methods: {
+    sortByLatest() {
+      return this.articles.sort((a, b) => {
+        return a.created_at < b.created_at ? 1 : -1;
+      });
+    },
+
+    sortByUpdated() {
+      return this.articles.sort((a, b) => {
+        return a.updated_at < b.updated_at ? 1 : -1;
+      });
+    },
+
+    sortByOldest() {
+      return this.articles.sort((a, b) => {
+        return a.created_at > b.created_at ? 1 : -1;
+      });
+    },
+
+    switchActiveList(listIndex) {
+      this.listActive = [false, false, false];
+      this.listActive[listIndex] = true;
+    },
+
+    async updateList() {
+      let draftData = await this.$axios.get("/posts");
+      this.articles = draftData.data;
+
+      this.articles = this.sortByLatest();
+    },
+
+    callParent() {
+      alert("working emit");
+    }
   }
 };
 </script>
@@ -142,6 +201,7 @@ body {
     list-style: none;
     padding: 10px 40px;
     font-size: 12px;
+    cursor: pointer;
     margin-top: 8px;
 
     &:hover {
@@ -193,6 +253,8 @@ body {
   &__number {
     font-size: 18px;
     cursor: pointer;
+    color: black;
+    text-decoration: none;
     display: block;
     width: 100%;
     &:hover {
@@ -226,6 +288,7 @@ body {
 .active {
   background-color: #5679e8;
   color: #fff;
+  pointer-events: none;
   &:hover {
     background-color: #33488b;
   }

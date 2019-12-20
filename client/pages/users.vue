@@ -14,9 +14,12 @@
         <ul>
           <li class="users__list" v-for="user in userList" :key="user.description">
             <div class="users__user">
-              <img class="users__img" :src="user.img" alt />
+              <img class="users__img" src="../assets/img/koala.svg" alt />
               <div class="users__info">
-                <a href class="users__name">{{user.name}}</a>
+                <nuxt-link
+                  :to="{name: 'user-user', params: {user:user.id}}"
+                  class="users__name"
+                >{{user.name}}</nuxt-link>
                 <p class="users__word">{{user.description}}</p>
               </div>
             </div>
@@ -31,24 +34,26 @@
 export default {
   data() {
     return {
-      userList: []
+      userList: [],
+      user: ""
     };
   },
 
   created: async function() {
-    let userData = await this.$axios.get("http://localhost:5000/api/users");
+    let userData = await this.$axios.get("/users");
     this.userList = userData.data;
+    console.log(this.userList);
+  },
+
+  computed: {
+    userLink() {}
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .users {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  background-color: #eee;
 
   &__wrapper {
     padding-top: 77px;
@@ -62,7 +67,10 @@ export default {
   }
   &__left {
     width: 30%;
-    padding: 0 16px 16px 16px;
+    padding: 16px;
+    background-color: #fff;
+    margin-right: 16px;
+    height: 100%;
   }
 
   &__right {
@@ -70,17 +78,20 @@ export default {
   }
   &__title {
     font-size: 24px;
+    text-align: center;
   }
   &__description {
     margin-top: 16px;
     line-height: 1.5;
-    color: #aeaeae;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   &__user {
     display: flex;
     align-items: center;
+    background-color: #fff;
+    padding: 8px;
+    border-radius: 5px;
   }
   &__list {
     list-style: none;
@@ -95,6 +106,8 @@ export default {
   &__img {
     max-width: 100%;
     width: 50px;
+    margin-right: 8px;
+    border-radius: 8px;
   }
 
   &__name {

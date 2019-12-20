@@ -69,27 +69,23 @@ $ php artisan migrate --seed
     "id" : 1,
     "name" : "name",
     "email" : "xxx@example.com",
-    "email_verified_at" : "2019-12-12 08:01:24",
     "created_at" : "2019-12-12 08:01:24",
     "updated_at" : "2019-12-12 08:01:24",
-    "api_token" : "token"
  },
  {
     ...
  }]
 ```
-**GET** api/users  
+**GET** api/user  
 ユーザーを返す  
 #### Response
 ```javascript
 {
-    "id" : 1,
+    "id" : {id},
     "name" : "name",
     "email" : "xxx@example.com",
-    "email_verified_at" : "2019-12-12 08:01:24",
     "created_at" : "2019-12-12 08:01:24",
-    "updated_at" : "2019-12-12 08:01:24",
-    "api_token" : "token"
+    "updated_at" : "2019-12-12 08:01:24"
  }
 ```
 
@@ -100,7 +96,12 @@ $ php artisan migrate --seed
 {
     "name" : "name",
     "email" : "xxx@example.com",
+    "password" : "password"
 }
+```
+#### Response
+```javascript
+{api_token}
 ```
 
 **PUT/PATCH** api/users/{user_id}  
@@ -119,17 +120,23 @@ $ php artisan migrate --seed
 
 ### POSTS
 
-
-**GET** api/posts/{user_id}  
+**GET** api/posts  
 全投稿を返す  
 #### Response
 ```javascript
 [{
     "id" : 1,
-    "user_id" : {user_id},
+    "user_id" : 2,
     "body" : "text",
     "created_at" : "1991-07-02 00:00:00",
     "updated_at" : "2018-10-05 00:00:00"
+    "user": {
+            "id": 2,
+            "name": "username",
+            "email": "email@example.net",
+            "created_at": "2019-12-15 14:30:18",
+            "updated_at": "2019-12-15 14:30:18"
+        }
  },
  {
     ...
@@ -146,6 +153,13 @@ $ php artisan migrate --seed
     "body" : "text",
     "created_at" : "1991-07-02 00:00:00",
     "updated_at" : "2018-10-05 00:00:00"
+    "user": {
+            "id": {user_id},
+            "name": "username",
+            "email": "email@example.net",
+            "created_at": "2019-12-15 14:30:18",
+            "updated_at": "2019-12-15 14:30:18"
+        }   
  },
  {
     ...
@@ -157,7 +171,7 @@ $ php artisan migrate --seed
 #### Request
 ```javascript
 {
-    "user_id" : {user_id},
+    "name" : {user_name},
     "body" : "text",
 }
 ```
@@ -173,3 +187,19 @@ $ php artisan migrate --seed
 
 **DELETE** api/posts/{post_id}  
 投稿を削除  
+
+### Login
+
+***POST*** api/login
+emailとpasswordでログインして、トークンを生成し直し渡す  
+#### Request
+```javascript
+{
+    "email" : "email@example.com",
+    "password" : "password"
+}
+```
+#### Response
+```javascript
+{api_token}
+```

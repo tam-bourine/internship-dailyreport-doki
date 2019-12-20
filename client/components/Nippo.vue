@@ -4,11 +4,23 @@
       <div class="nippo__user">
         <img src="../assets/img/nippo__icon.svg" alt="user-icon" class="nippo__user-icon" />
       </div>
-
       <div class="nippo__content">
         <div class="nippo__info">
-          <a class="nippo__user-link">{{this.author}}</a>
-          <time style="color:#b8b8b8">{{this.time}}</time>
+          <div class="nippo__infos">
+            <nuxt-link
+              :to="{name: 'user-user', params: {user:this.id} }"
+              class="nippo__user-link"
+            >{{this.author}}</nuxt-link>
+            <time style="color:#b8b8b8">{{this.time}}</time>
+          </div>
+          <div class="nippo__change" v-if="admin">
+            <a href class="nippo__btn btn--edit" @click.prevent="editPost()">
+              <font-awesome-icon icon="edit" class="nippo__btn-icon"></font-awesome-icon>
+            </a>
+            <a href class="nippo__btn btn--delete" @click.prevent="deletePost()">
+              <font-awesome-icon icon="trash" class="nippo__btn-icon"></font-awesome-icon>
+            </a>
+          </div>
         </div>
         <MarkdownItVue class="md-body nippo__article" :content="this.script" />
         <div class="nippo__tags">
@@ -31,11 +43,26 @@ export default {
   components: {
     MarkdownItVue
   },
-
-  props: ["author", "date", "script", "time", "title"],
-
+  props: ["author", "date", "script", "time", "title", "id", "articleId"],
   data() {
-    return {};
+    return {
+      admin: false
+    };
+  },
+  methods: {
+    editPost() {
+      this.$store.commit("setDraft", this.script);
+      this.$store.commit("setDraftId", this.articleId);
+      this.$router.push("editor");
+    },
+    async deletePost() {
+      const res = await this.$axios.delete("/posts/" + this.articleId);
+      this.$emit("update");
+    }
+  },
+  created: function() {
+    if (this.$auth.user.id == this.id) this.admin = true;
+    this.$emit("callParent");
   }
 };
 </script>
@@ -62,7 +89,7 @@ export default {
     }
   }
   &__content {
-    width: 80%;
+    width: 90%;
     padding: 8px;
   }
 
@@ -79,6 +106,9 @@ export default {
   }
 
   &__user-link {
+    text-decoration: none;
+    color: #24292d;
+    font-weight: bold;
     &:hover {
       transition: 0.3s;
       color: #337ab7;
@@ -107,6 +137,49 @@ export default {
       text-decoration: underline;
     }
   }
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__btn {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 6px;
+    display: block;
+    margin-right: 8px;
+    padding: 5px 5px;
+    line-height: 2;
+    font-size: 10px;
+    width: 56px;
+
+    &:hover {
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+
+    &:nth-child(2) {
+      margin-right: 0;
+    }
+
+    &-icon {
+      font-size: 15px;
+    }
+  }
+
+  &__change {
+    display: flex;
+  }
+}
+
+.btn--edit {
+  background-color: #65c97a;
+}
+.btn--delete {
+  background-color: #d75946;
 }
 
 .md-body {
