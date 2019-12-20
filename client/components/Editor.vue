@@ -28,7 +28,7 @@
                 <font-awesome-icon class="editor__bar-icon" icon="image" />
               </a>
 
-              <a>
+              <a href="https://gist.github.com/rxaviers/7360908" target="_blank">
                 <font-awesome-icon class="editor__bar-icon" icon="smile-beam" />
               </a>
 
@@ -106,7 +106,15 @@ console.log(welcome);
           </div>
           <div class="editor__helper" v-if="!this.script">
             <p class="editor__helper-text">
-              <font-awesome-icon icon="question-circle"></font-awesome-icon>マークダウンの書き方
+              <ul>
+                  <li class='editor__icon'>
+                  <font-awesome-icon icon="question-circle"></font-awesome-icon>マークダウンの書き方
+                  </li>
+                     <li class='editor__icon'>
+                  <font-awesome-icon icon="smile-beam"></font-awesome-icon>使用できる絵文字
+                  </li>
+              </ul>
+
             </p>
           </div>
           <MarkdownItVue class="md-body editor__preview-render" :content="this.script" />
@@ -119,27 +127,30 @@ console.log(welcome);
     <div class="editor__footer">
       <div class="editor__footer-btns">
         <!--  v-if -->
-        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="testDraft()">
+
+        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="saveDraft()">
           <font-awesome-icon icon="save" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き保存
-        </a>
-        <a class="editor__footer-btn" v-if="this.selected==1" @click.prevent="testDraft()">
-          <font-awesome-icon icon="download" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を更新
         </a>
         <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="postDraft()">
           <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿
         </a>
+                <a class="editor__footer-btn" v-if="this.selected==1" @click.prevent="updateNippo()">
+          <font-awesome-icon icon="download" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を更新
+        </a>
         <!-- v-if end -->
+
         <a class="editor__footer-btn icon--small clicked" @click="showMenu=!showMenu">
           <span :class="{clicked:!showMenu,unClicked:showMenu}">▼</span>
           <div class="editor__menu visible" v-if="showMenu">
             <ul class="editor__lists">
+
+              <li class="editor__list" @click.prevent="selected =1" :class="{editOff:!edit}">
+                <font-awesome-icon icon="download" class="editor__list-icon"></font-awesome-icon>日報を更新
+              </li>
               <li class="editor__list" @click.prevent="selected = 0">
                 <font-awesome-icon icon="save" class="editor__list-icon"></font-awesome-icon>下書き保存
               </li>
-              <li class="editor__list" @click.prevent="selected =1">
-                <font-awesome-icon icon="download" class="editor__list-icon"></font-awesome-icon>日報を更新
-              </li>
-              <li class="editor__list active" @click.prevent="selected=2">
+                <li class="editor__list active" @click.prevent="selected=2">
                 <font-awesome-icon icon="upload" class="editor__list-icon"></font-awesome-icon>日報を投稿
               </li>
             </ul>
@@ -169,7 +180,8 @@ export default {
       leftScale: false,
       rightScale: false,
       selected: 0,
-      user: this.$auth.user
+      user: this.$auth.user,
+      edit:false
     };
   },
 
@@ -183,6 +195,25 @@ export default {
       });
     },
 
+    async updateNippo() {
+        const res = await this.$axios.put('/posts/'+this.$store.getters.getDraftId, {
+            id:this.$auth.user.id,
+            body:this.script
+        });
+
+        this.$store.commit('setDraft','');
+        this.$store.commit('setDraftId',undefined);
+
+        this.$router.push('/user/'+this.$auth.user.id);
+
+    },
+
+
+    saveDraft()
+    {
+        this.$store.commit('setDraft',this.script);
+        alert('あなたの働きを保存しました∠(｀・ω・´).')
+    },
     toggleMenu() {
       this.showMenu = !this.showMenu;
     },
@@ -194,13 +225,20 @@ export default {
     scaleRight() {
       this.rightScale = !this.rightScale;
     }
+
+
   },
   created: function() {
     this.script = this.$store.getters.getDraft;
-    if (this.$store.getters.getDraft != "") {
-      this.selected = 1;
+    if (this.$store.getters.getDraftId != undefined) {
+        this.edit = true;
+        }
+  },
+
+    beforeRouteLeave:function() {
+        this.$store.commit('setDraft',this.script);
     }
-  }
+
 };
 </script>
 
@@ -276,7 +314,6 @@ a:hover {
 
   &__preview {
     width: 50%;
-    padding-bottom: 40px;
     position: relative;
   }
 
@@ -409,6 +446,14 @@ a:hover {
     }
   }
 
+  &__icon {
+      list-style: none;
+      margin-top:8px;
+      &:nth-child(1) {
+          margin-top:0;
+      }
+  }
+
   &__icon-question {
     position: relative;
 
@@ -467,5 +512,10 @@ a:hover {
 .unscale {
   width: 50%;
   transition: 0.2s;
+}
+
+.editOff{
+    pointer-events: none;
+    text-decoration: line-through;
 }
 </style>

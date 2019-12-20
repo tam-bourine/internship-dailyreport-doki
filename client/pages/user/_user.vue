@@ -9,11 +9,15 @@
 
       <div class="user__right">
         <Nippo
+          @update="updateList"
           class="user__card"
           v-for="nippo in articles"
           :key="nippo.id"
           :time="nippo.created_at"
           :script="nippo.body"
+          :author="nippo.user.name"
+          :id="nippo.user_id"
+          :articleId="nippo.id"
         />
       </div>
       <div class="user__center">
@@ -93,6 +97,11 @@ export default {
     switchActiveList(listIndex) {
       this.listActive = [false, false, false];
       this.listActive[listIndex] = true;
+    },
+    async updateList() {
+      let draftData = await this.$axios.get("/posts/" + this.$auth.id);
+      this.articles = draftData.data;
+      this.articles = this.sortByLatest();
     }
   }
 };

@@ -61,7 +61,10 @@
           </div>
           <div class="home__boxes">
             <div class="home__box">
-              <a class="home__number">0</a>
+              <nuxt-link
+                class="home__number"
+                :to="{name:'user-user',params:{user:this.$auth.user.id}}"
+              >{{this.nippoAmount}}</nuxt-link>
               <p class="home__category">日報</p>
             </div>
             <div class="home__box">
@@ -91,12 +94,16 @@ export default {
     return {
       user: true,
       articles: [],
-      listActive: [true, false, false]
+      listActive: [true, false, false],
+      nippoAmount: []
     };
   },
 
   created: async function() {
     this.updateList();
+    const nippo = await this.$axios.get("/posts/" + this.$auth.user.id);
+    this.nippoAmount = nippo.data.length;
+    console.log("this is how many nippo you wrote", this.nippoAmount);
     //if not logged in send user to login form or singup
   },
 
@@ -246,6 +253,8 @@ body {
   &__number {
     font-size: 18px;
     cursor: pointer;
+    color: black;
+    text-decoration: none;
     display: block;
     width: 100%;
     &:hover {
