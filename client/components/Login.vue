@@ -48,6 +48,7 @@
           <a class="form__btn" @click.prevent="login()" v-if="checked">アカウントにログイン</a>
           <a class="form__btn" v-else @click.prevent="submitForm()">アカウントを作成する</a>
         </div>
+                <a v-if='!checked' class="form__link" @click.prevent='checked=true'>既にアカウントを持っている場合はこちら</a>
       </div>
     </div>
   </form>

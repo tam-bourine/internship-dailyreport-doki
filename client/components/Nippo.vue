@@ -52,6 +52,7 @@ export default {
   methods: {
     editPost() {
       this.$store.commit("setDraft", this.script);
+      this.$store.commit("setDraftId", this.articleId);
       this.$router.push("editor");
     },
     async deletePost() {
@@ -152,7 +153,7 @@ export default {
     margin-right: 8px;
     padding: 5px 5px;
     line-height: 2;
-    font-size: 12px;
+    font-size: 10px;
     width: 56px;
 
     &:hover {

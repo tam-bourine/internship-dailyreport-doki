@@ -32,6 +32,10 @@ const config = {
 
     },
 
+    router: {
+        middleware: ['auth']
+    },
+
     /*
      ** Global CSS
      */
@@ -55,7 +59,8 @@ const config = {
         '@nuxtjs/axios',
         '@nuxtjs/markdownit',
         'nuxt-fontawesome',
-        '@nuxtjs/auth'
+        '@nuxtjs/auth',
+        'vue-sweetalert2/nuxt'
     ],
 
     auth: {
@@ -64,10 +69,15 @@ const config = {
         redirect: {
 
             login: '/login',
-            logout: '/',
-            callback: '/login',
-            home: '/'
-
+            logout: '/login',
+            callback: false,
+            home: '/home'
+            /*
+                未ログイン時に認証ルートへアクセスした際のリダイレクトURL
+                logout: '/login',  // ログアウト時のリダイレクトURL
+                callback: false,   // Oauth認証等で必要となる コールバックルート
+                home: '/',         // ログイン後のリダイレクトURL
+                 */
         },
         strategies: {
 

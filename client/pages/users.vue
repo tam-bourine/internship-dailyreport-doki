@@ -70,6 +70,7 @@ export default {
     padding: 16px;
     background-color: #fff;
     margin-right: 16px;
+    height: 100%;
   }
 
   &__right {

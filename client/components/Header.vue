@@ -11,7 +11,6 @@
         <nuxt-link to="/home" class="header__link">ホーム</nuxt-link>
         <nuxt-link to="/users" class="header__link">ユーザー一覧</nuxt-link>
       </div>
-
       <div class="header__box">
         <nuxt-link to="/editor" class="header__btn">
           <font-awesome-icon style="margin-right:8px" icon="edit" />投稿する
@@ -25,7 +24,6 @@
               :class="{active:clicked, notActive:!clicked}"
             ></font-awesome-icon>
           </a>
-
           <ul class="header__dropdown" v-if="clicked">
             <li class="header__dropdown-item">
               <h2 class="header__dropdown-name">Signed in as {{this.$auth.user.name}}</h2>
@@ -56,11 +54,12 @@
 export default {
   data() {
     return {
-      clicked: false
+      clicked: false,
+      nippoAmount: 0
     };
   },
 
-  created: function() {
+  created: async function() {
     this.clicked = false;
   },
 
@@ -110,6 +109,9 @@ export default {
   &__box {
     display: flex;
     align-items: center;
+    &:nth-child(2) {
+      margin-right: 20px;
+    }
   }
   &__title {
     max-width: 180px;
@@ -159,12 +161,12 @@ export default {
 
   &__toggleList {
     cursor: pointer;
+    user-select: none;
   }
   &__icon {
     width: 100%;
     max-width: 40px;
   }
-
   &__dropdown {
     position: absolute;
     top: 54px;
@@ -175,12 +177,10 @@ export default {
     padding: 5px 10px;
     border-radius: 8px;
   }
-
   &__dropdown-icon {
     margin-right: 8px;
     font-size: 13px;
   }
-
   &__dropdown-item {
     list-style: none;
     font-size: 12px;
@@ -194,6 +194,7 @@ export default {
     > a {
       text-decoration: none;
       color: inherit;
+      user-select: none;
     }
 
     &:nth-child(1) {
