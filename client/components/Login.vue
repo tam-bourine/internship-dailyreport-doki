@@ -2,9 +2,30 @@
   <form action class="form">
     <div class="form__wrapper">
       <div class="form__card">
-        <h2 class="form__title">ようこそ！(^o^)</h2>
+        <div class="toggle-switch">
+          <input id="toggle" v-model="checked" class="toggle-input" type="checkbox" />
+          <label for="toggle" class="toggle-label"></label>
+        </div>
+        <div class="form__info">
+          <h2 class="form__title" v-if ='!checked'>ユーザー登録(oﾟ∀ﾟ)σ</h2>
+          <h2　class='form__title' v-else>ログイン(｡･ω･)ﾉ</h2>
+        </div>
+
         <div class="form__inputs">
           <div class="form__input-box">
+            <transition name="fade">
+              <div class="form__input-box">
+                <input
+                  v-if="!checked"
+                  id="name"
+                  class="form__input"
+                  v-model="name"
+                  placeholder="名前"
+                  type="email"
+                />
+              </div>
+            </transition>
+
             <input
               id="emial"
               class="form__input"
@@ -23,12 +44,11 @@
               v-model="password"
             />
           </div>
-          <a class="form__btn" @click.prevent="submitForm()">アカウントを作成する</a>
-          <a class="form__btn" @click.prevent="login()">アカウントにログイン</a>
 
-          <a class="form__link">既にアカウントを持っている場合はこちら</a>
-          <h2>{{this.$auth.loggedIn}}</h2>
+          <a class="form__btn" @click.prevent="login()" v-if="checked">アカウントにログイン</a>
+          <a class="form__btn" v-else @click.prevent="submitForm()">アカウントを作成する</a>
         </div>
+                <a v-if='!checked' class="form__link" @click.prevent='checked=true'>既にアカウントを持っている場合はこちら</a>
       </div>
     </div>
   </form>
@@ -36,58 +56,39 @@
 
 <script>
 export default {
-  middleware({ store, redirect }) {
-    if (store.$auth.loggedIn) {
-      redirect("/success");
-    }
-  },
+  components: {},
 
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      name: "",
+      checked: false
     };
   },
   methods: {
     /* Create User Account  */
     async submitForm() {
-      const token = await this.$axios.post(
-        "https://tango-dojo-api.herokuapp.com/api/login",
-        {
-          userInfo: {
-            email: this.email,
-            password: this.password
-          }
-        }
-      );
-      console.log(token, "this is token");
-      // this.$state.dispatch('')
-    },
-
-    async loginTest() {
-      const { test } = await this.$auth.loginWith("local", {
-        data: {
-          email: this.email,
-          password: this.password
-        }
+      const token = await this.$axios.post("/users", {
+        email: this.email,
+        password: this.password,
+        name: this.name
       });
+      this.login();
     },
 
     async login() {
       try {
         await this.$auth.loginWith("local", {
           data: {
-            userInfo: {
-              email: this.email,
-              password: this.password
-            }
+            email: this.email,
+            password: this.password,
+            name: this.name
           }
         });
       } catch (error) {
         console.log(error);
       }
-
-      alert("executed login");
     }
   }
 };
@@ -107,7 +108,7 @@ export default {
   right: 0;
 
   &__wrapper {
-    max-width: 1100px;
+    max-width: 960px;
     margin: 0 auto;
     text-align: center;
   }
@@ -135,9 +136,15 @@ export default {
 
   &__title {
     font-size: 24px;
+    font-weight: bold;
   }
-
+  &__info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   &__card {
+    position: relative;
     background-color: white;
     max-width: 467px;
     max-width: 50%;
@@ -180,5 +187,69 @@ export default {
       transition: 0.7s;
     }
   }
+}
+
+// input
+.toggle-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  opacity: 0;
+  cursor: pointer;
+}
+
+// label
+.toggle-label {
+  width: 56px;
+  height: 21px;
+  background: #ccc;
+  position: relative;
+  display: inline-block;
+  border-radius: 46px;
+  transition: 0.4s;
+  box-sizing: border-box;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    left: 0;
+    top: 0px;
+    z-index: 2;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: 0.4s;
+  }
+}
+
+// input:ckeecked
+.toggle-input:checked {
+  + .toggle-label {
+    background-color: #4bd865;
+    &:after {
+      left: 37px;
+    }
+  }
+}
+
+p {
+  margin-top: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+
+div {
+  margin: auto;
+}
+
+.toggle-switch {
+  position: absolute;
+  margin: 0 0 0 30px;
+  top: 40px;
+  right: 32px;
 }
 </style>

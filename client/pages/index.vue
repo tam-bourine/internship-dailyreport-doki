@@ -9,8 +9,9 @@
       </div>
       <div class="index__right">
         <!-- Login components -->
-<!--        <p>{{this.$auth.user.name}}</p>-->
-        <p>test</p>
+        <h2>is logged in {{this.$auth.loggedIn}}</h2>
+        <h2>username {{this.$auth.user.id}}</h2>
+        <h2>username {{this.$auth.user.name}}</h2>
       </div>
     </div>
   </section>
@@ -20,17 +21,15 @@
 export default {
   components: {},
   data() {
-    return {
-      model: "# Hello World!"
-    };
+    return {};
   },
-  methods: {
-    test() {
-      console.log(result);
-    },
-    render() {
-      console.log(this.$md.render(this.model));
-      return this.$md.render(this.model);
+  methods: {},
+
+  created() {
+    if (!this.$auth.loggedIn) {
+      redirect("/login");
+    } else {
+      console.log("you are logged in");
     }
   }
 };

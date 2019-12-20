@@ -7,8 +7,8 @@ const config = {
     head: {
         title: process.env.npm_package_name || '',
         meta: [{
-            charset: 'utf-8'
-        },
+                charset: 'utf-8'
+            },
             {
                 name: 'viewport',
                 content: 'width=device-width, initial-scale=1'
@@ -29,8 +29,13 @@ const config = {
      ** Customize the progress-bar color
      */
     loading: {
-        color: '#fff'
+
     },
+
+    router: {
+        middleware: ['auth']
+    },
+
     /*
      ** Global CSS
      */
@@ -54,7 +59,8 @@ const config = {
         '@nuxtjs/axios',
         '@nuxtjs/markdownit',
         'nuxt-fontawesome',
-        '@nuxtjs/auth'
+        '@nuxtjs/auth',
+        'vue-sweetalert2/nuxt'
     ],
 
     auth: {
@@ -63,10 +69,15 @@ const config = {
         redirect: {
 
             login: '/login',
-            logout: '/',
-            callback: '/login',
-            home: '/'
-
+            logout: '/login',
+            callback: false,
+            home: '/home'
+            /*
+                未ログイン時に認証ルートへアクセスした際のリダイレクトURL
+                logout: '/login',  // ログアウト時のリダイレクトURL
+                callback: false,   // Oauth認証等で必要となる コールバックルート
+                home: '/',         // ログイン後のリダイレクトURL
+                 */
         },
         strategies: {
 
@@ -75,33 +86,27 @@ const config = {
                 endpoints: {
 
                     login: {
-                        url: 'http://localhost:5000/api/auth/login',
+                        url: '/login',
                         method: "post",
-                        propertyName: 'token'
+                        propertyName: false
                     },
-
-                    logout: {
-                        url: 'http://localhost:5000/api/auth/logout',
-                        method: false
-                    },
-
                     user: {
-                        url: 'http://localhost:5000/api/auth/user',
+                        url: '/user',
                         method: 'get',
                         propertyName: false
                     },
-
-                    tokenRequired: true,
-                    tokenType: 'Bearer'
-
+                    logout: {
+                        url: '/logout',
+                        method: 'post'
+                    }
 
                 }
 
 
             },
-            tokenRequired: false,
-            tokenType: false
 
+            tokenRequired: true,
+            tokenType: 'bearer'
 
         }
     },
@@ -113,8 +118,7 @@ const config = {
         /*
          ** You can extend webpack config here
          */
-        extend(config, ctx) {
-        }
+        extend(config, ctx) {}
     },
 
     generate: {
