@@ -69,12 +69,31 @@ export default {
   methods: {
     /* Create User Account  */
     async submitForm() {
-      const token = await this.$axios.post("/users", {
-        email: this.email,
-        password: this.password,
-        name: this.name
+
+    if(this.validation(this.email,this.password,this.name)) {
+        try {
+
+            const token = await this.$axios.post("/users", {
+                email: this.email,
+            password: this.password,
+            name: this.name
       });
-      this.login();
+        }catch(error) {
+
+            console.log(error);
+            alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
+            return
+        }
+             this.login();
+        }
+    },
+
+    validation(email,password,name) {
+        if(!this.mailCheck(email) || this.password.length< 8　||  this.name == ""){
+            alert('メールアドレスを間違えているか、パスワードが8文字以下です(゜ロ゜)')
+            return false;
+        }
+        return true;
     },
 
     async login() {
@@ -87,9 +106,25 @@ export default {
           }
         });
       } catch (error) {
-        console.log(error);
-      }
+                 alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
+}
+    },
+
+
+    //入力された内容がメールアドレスの形をしているかどうかチェック
+    mailCheck( mail ) {
+    let mail_regex1 = new RegExp( '(?:[-!#-\'*+/-9=?A-Z^-~]+\.?(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*|"(?:[!#-\[\]-~]|\\\\[\x09 -~])*")@[-!#-\'*+/-9=?A-Z^-~]+(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*' );
+    let mail_regex2 = new RegExp( '^[^\@]+\@[^\@]+$' );
+    if( mail.match( mail_regex1 ) && mail.match( mail_regex2 ) ) {
+        if( mail.match( /[^a-zA-Z0-9\!\"\#\$\%\&\'\(\)\=\~\|\-\^\\\@\[\;\:\]\,\.\/\\\<\>\?\_\`\{\+\*\} ]/ ) ) { return false; }
+        if( !mail.match( /\.[a-z]+$/ ) ) { return false; }
+        return true;
     }
+        else
+    {
+        return false;
+    }
+}
   }
 };
 </script>

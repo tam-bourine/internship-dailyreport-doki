@@ -128,10 +128,10 @@ console.log(welcome);
       <div class="editor__footer-btns">
         <!--  v-if -->
 
-        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="saveDraft()">
+        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="saveNippo()">
           <font-awesome-icon icon="save" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き保存
         </a>
-        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="postDraft()">
+        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="postNippo()">
           <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿
         </a>
                 <a class="editor__footer-btn" v-if="this.selected==1" @click.prevent="updateNippo()">
@@ -157,6 +157,7 @@ console.log(welcome);
           </div>
         </a>
       </div>
+
     </div>
 
     <!-- Editor Wrapper -->
@@ -166,10 +167,11 @@ console.log(welcome);
 <script>
 import MarkdownItVue from "markdown-it-vue";
 import "markdown-it-vue/dist/markdown-it-vue.css";
+import VueStar from 'vue-star';
 
 export default {
   components: {
-    MarkdownItVue
+    MarkdownItVue,VueStar
   },
   data() {
     return {
@@ -179,7 +181,7 @@ export default {
       showMenu: false,
       leftScale: false,
       rightScale: false,
-      selected: 0,
+      selected: 2,
       user: this.$auth.user,
       edit:false
     };
@@ -187,32 +189,58 @@ export default {
 
   methods: {
     /* Test Post request */
-    async postDraft() {
-      let time = new Date().toLocaleString();
-      const res = await this.$axios.post("/posts", {
-        name: this.user.name,
-        body: this.script
+    async postNippo() {
+        if(this.script == '') {
+            alert('何か書いてください！(# ﾟДﾟ)')
+            return;
+        }
+        try{
+
+        const res = await this.$axios.post("/posts", {
+            name: this.user.name,
+            body: this.script,
+            tag:this.tag
       });
+        }catch(error) {
+            alert("サーバー側でエラーが発生している可能性があります(´・ω・`)¥n しばらく待ってからもう一度試してみてください！");
+
+        }
+            alert('お疲れ様でした(o・ω・o)ゝ日報が投稿されましたよ！');
+            this.$router.push('/home');
     },
 
+
+
+
+
     async updateNippo() {
-        const res = await this.$axios.put('/posts/'+this.$store.getters.getDraftId, {
-            id:this.$auth.user.id,
-            body:this.script
+          if(this.script == '') {
+            alert('何か書いてください！(# ﾟДﾟ)')
+            return;
+        }
+
+        try{
+            const res = await this.$axios.put('/posts/'+this.$store.getters.getDraftId, {
+                id:this.$auth.user.id,
+                body:this.script,
+                tag:this.tag
         });
+        }catch(error){
+            alert("サーバー側でエラーが発生している可能性があります(´・ω・`)¥n しばらく待ってからもう一度試してみてください！");
+            return;
+        }
+         alert('お疲れ様でした(o・ω・o)ゝ日報が更新されましたよ！');
 
         this.$store.commit('setDraft','');
         this.$store.commit('setDraftId',undefined);
-
         this.$router.push('/user/'+this.$auth.user.id);
-
     },
 
 
-    saveDraft()
+    saveNippo()
     {
         this.$store.commit('setDraft',this.script);
-        alert('あなたの働きを保存しました∠(｀・ω・´).')
+        alert('あなたの働きを保存しました∠(｀・ω・´)/')
     },
     toggleMenu() {
       this.showMenu = !this.showMenu;
