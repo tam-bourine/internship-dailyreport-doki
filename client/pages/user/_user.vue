@@ -3,7 +3,7 @@
     <div class="user__wrapper">
       <div class="user__left">
         <img src="../../assets/img/nippo__icon.svg" alt class="user__img" />
-        <h2 class="user__name">{{this.articles.author}}manaki ikeda</h2>
+        <h2 class="user__name">{{this.name}}</h2>
         <p class="user__description">たい焼きを食べるのが大好きな大学生です。</p>
       </div>
 
@@ -62,6 +62,7 @@ export default {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
     this.articles = userPost.data;
     this.articles = this.sortByLatest();
+    this.name = this.articles[0].user.name;
     //ログインユーザのページが開かれている場合
     this.admin = true;
   },

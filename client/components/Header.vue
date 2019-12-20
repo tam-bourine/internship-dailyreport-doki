@@ -16,7 +16,7 @@
           <font-awesome-icon style="margin-right:8px" icon="edit" />投稿する
         </nuxt-link>
         <div class="header__user" v-if="this.$auth.loggedIn">
-          <a class="header__toggleList" @click.prevent="clickedTest()">
+          <a class="header__toggleList" @click.prevent="open()" v-click-outside="close">
             <img src="../assets/img/penguin.svg" alt="user-icon" class="header__icon" />
             <font-awesome-icon
               icon="caret-up"
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import ClickOutside from "vue-click-outside";
 export default {
   data() {
     return {
@@ -58,18 +59,23 @@ export default {
       nippoAmount: 0
     };
   },
-
+  directives: {
+    ClickOutside
+  },
   created: async function() {
     this.clicked = false;
   },
 
   methods: {
-    clickedTest() {
-      this.clicked = !this.clicked;
+    open() {
+      this.clicked = true;
     },
 
     logout() {
       this.$auth.logout();
+    },
+    close() {
+      this.clicked = false;
     }
   },
   beforeRouteLeave() {
@@ -86,7 +92,7 @@ export default {
   background-color: #5679e8;
   position: fixed;
   width: 100%;
-  z-index: 1;
+  z-index: 999;
   &__wrapper {
     max-width: 1100px;
     padding: 5px 0;

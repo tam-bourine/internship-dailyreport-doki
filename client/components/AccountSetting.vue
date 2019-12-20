@@ -41,19 +41,24 @@ export default {
   methods: {
     async updateUserInfo() {
       if (
-        this.email == undefined ||
-        this.name == undefined ||
-        this.password == undefined
+        this.mailCheck(this.email) ||
+        this.name == "" ||
+        this.password.length < 8
       ) {
-        alert("何かの値が抜けているよ！(゜ロ゜)");
+        alert(
+          "メールアドレスを間違えているか、パスワードが8文字以下です(゜ロ゜)"
+        );
+        return;
       } else {
-        const res = await this.$axios.put("/users/" + this.$auth.user.id, {
-          name: this.name,
-          email: this.email,
-          password: this.password
-        });
-
-        await this.$auth.fetchUser();
+        try {
+          const res = await this.$axios.put("/users/" + this.$auth.user.id, {
+            name: this.name,
+            email: this.email,
+            password: this.password
+          });
+        } catch (error) {
+          alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)");
+        }
       }
     },
 
@@ -61,6 +66,28 @@ export default {
       let res = await this.$axios.delete("/users/" + this.$auth.user.id);
       this.$auth.logout();
       console.log(res);
+    },
+
+    mailCheck(mail) {
+      let mail_regex1 = new RegExp(
+        "(?:[-!#-'*+/-9=?A-Z^-~]+.?(?:.[-!#-'*+/-9=?A-Z^-~]+)*|\"(?:[!#-[]-~]|\\\\[\x09 -~])*\")@[-!#-'*+/-9=?A-Z^-~]+(?:.[-!#-'*+/-9=?A-Z^-~]+)*"
+      );
+      let mail_regex2 = new RegExp("^[^@]+@[^@]+$");
+      if (mail.match(mail_regex1) && mail.match(mail_regex2)) {
+        if (
+          mail.match(
+            /[^a-zA-Z0-9\!\"\#\$\%\&\'\(\)\=\~\|\-\^\\\@\[\;\:\]\,\.\/\\\<\>\?\_\`\{\+\*\} ]/
+          )
+        ) {
+          return false;
+        }
+        if (!mail.match(/\.[a-z]+$/)) {
+          return false;
+        }
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };

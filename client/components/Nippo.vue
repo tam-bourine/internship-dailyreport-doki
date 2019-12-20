@@ -23,12 +23,18 @@
           </div>
         </div>
         <MarkdownItVue class="md-body nippo__article" :content="this.script" />
-        <div class="nippo__tags">
-          <ul class="nippo__tag-lists">
-            <a class="nippo__tag">php</a>
-            <a class="nippo__tag">html</a>
-            <a class="nippo__tag">css</a>
-          </ul>
+        <div class="nippo__bottom">
+          <div class="nippo__tags">
+            <ul class="nippo__tag-lists">
+              <a class="nippo__tag">php</a>
+              <a class="nippo__tag">html</a>
+              <a class="nippo__tag">css</a>
+            </ul>
+          </div>
+
+          <vue-star class="nippo__like" animate="animated rubberBand" color="#F05654">
+            <a slot="icon" class="fa fa-heart" @click="handleClick"></a>
+          </vue-star>
         </div>
       </div>
     </div>
@@ -38,15 +44,17 @@
 <script>
 import MarkdownItVue from "markdown-it-vue";
 import "markdown-it-vue/dist/markdown-it-vue.css";
-
+import VueStar from "vue-star";
 export default {
   components: {
-    MarkdownItVue
+    MarkdownItVue,
+    VueStar
   },
   props: ["author", "date", "script", "time", "title", "id", "articleId"],
   data() {
     return {
-      admin: false
+      admin: false,
+      likes: 0
     };
   },
   methods: {
@@ -62,16 +70,15 @@ export default {
   },
   created: function() {
     if (this.$auth.user.id == this.id) this.admin = true;
-    this.$emit("callParent");
+    /* const res = await this.$axios.get() */
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .nippo {
-  max-width: 500px;
+  max-width: 560px;
   padding: 10px;
-  margin: 0 auto;
   border: 1px solid #fafafa;
   background-color: white;
   border-radius: 10px;
@@ -172,6 +179,18 @@ export default {
 
   &__change {
     display: flex;
+  }
+
+  &__bottom {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__like {
+    right: 20px;
+    bottom: -45px;
   }
 }
 
