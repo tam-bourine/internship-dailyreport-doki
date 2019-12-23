@@ -45,7 +45,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $posts = Post::with('user')->where('user_id', $id)->get();
+        $posts = Post::with(['user', 'likes'])->where('user_id', $id)->get();
         return $posts;
     }
 

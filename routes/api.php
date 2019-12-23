@@ -30,11 +30,11 @@ Route::group(['middleware' =>['auth:api']], function(){
 });
 
 // LIKE
-Route::middleware('api')->post('posts/{post}/likes/{user_id}', 'Api\LikesController@store');
-Route::middleware('api')->delete('posts/{post}/likes/{user_id}', 'Api\LikesController@destroy');
+Route::middleware('auth:api')->post('posts/{post}/likes/{user_id}', 'Api\LikesController@store');
+Route::middleware('auth:api')->delete('posts/{post}/likes/{user_id}', 'Api\LikesController@destroy');
 
 // TAG
-Route::middleware('api')->get('tags', 'Api\TagController@index');
-Route::middleware('api')->post('posts/{post}/tags', 'Api\TagController@store');
-Route::middleware('api')->get('tags/{tag}', 'Api\TagController@show');
-Route::middleware('api')->delete('tags/{tag}', 'Api\TagController@destroy');
+Route::middleware('auth:api')->get('tags', 'Api\TagController@index');
+Route::middleware('auth:api')->post('posts/{post}/tags', 'Api\TagController@store');
+Route::middleware('auth:api')->get('tags/{tag}', 'Api\TagController@show');
+Route::middleware('auth:api')->delete('tags/{tag}', 'Api\TagController@destroy');
