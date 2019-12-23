@@ -40,7 +40,7 @@ class PostController extends Controller
         $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
-        return "succeed";
+        return $post->id;
     }
 
     public function show($id)
