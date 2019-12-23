@@ -40,12 +40,12 @@ class PostController extends Controller
         $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
-        return "succeed";
+        return $post->id;
     }
 
     public function show($id)
     {
-        $posts = Post::with('user')->where('user_id', $id)->get();
+        $posts = Post::with(['user', 'likes'])->where('user_id', $id)->get();
         return $posts;
     }
 
