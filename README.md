@@ -176,13 +176,17 @@ $ php artisan migrate --seed
 ```
 
 **POST** api/posts  
-新規投稿を作成  
+新規投稿を作成。作成後その投稿のidを返す。  
 #### Request
 ```javascript
 {
     "name" : {user_name},
     "body" : "text",
 }
+```
+#### Response
+```javascript
+{ "id": 2}
 ```
 **PUT/PATCH** api/posts/{post_id}  
 投稿を更新  
