@@ -34,18 +34,17 @@ class TagController extends Controller
         ]);
 
         if ($validator->fails()) {
+            $tag1 = Tag::where('name', $request->name)->first();
+            $tag1->post()->attach($post->id);
             return "already exists";
         }
 
-        $tag = new Tag;
-        $tag->name = $request->name;
-        $tag->save();
-
-        $tag2 = Tag::where('name', $request->name)->first();
-        $tag2->post()->attach($tag->id);
-        $tag2->post()->attach($tag->id);
+        $tag2 = new Tag;
+        $tag2->name = $request->name;
         $tag2->save();
 
+        $tag3 = Tag::where('name', $request->name)->first();
+        $tag3->post()->attach($post->id);
         return "success";
     }
 
