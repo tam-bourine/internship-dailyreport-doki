@@ -137,6 +137,15 @@ $ php artisan migrate --seed
             "created_at": "2019-12-15 14:30:18",
             "updated_at": "2019-12-15 14:30:18"
         }
+    "likes": [
+        {
+            "id": 2,
+            "user_id": 14,
+            "post_id": 2,
+            "created_at": "2019-12-23 15:30:42",
+            "updated_at": "2019-12-23 15:30:42"
+        }
+    ]
  },
  {
     ...
