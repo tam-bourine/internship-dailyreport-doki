@@ -19,7 +19,7 @@ class TagController extends Controller
 
     public function show(Tag $tag)
     {
-        $tag = Post::with('post')->where('name', $tag->name)->get();
+        $tag = Tag::with('post')->where('name', $tag->name)->get();
         return $tag;
     }
 
