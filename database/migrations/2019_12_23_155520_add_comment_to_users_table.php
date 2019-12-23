@@ -14,7 +14,7 @@ class AddCommentToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('comment', 20);
+            $table->string('comment', 20)->nullable();
         });
     }
 
