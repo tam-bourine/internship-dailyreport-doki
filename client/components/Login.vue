@@ -44,7 +44,6 @@
               v-model="password"
             />
           </div>
-
           <a class="form__btn" @click.prevent="login()" v-if="checked">アカウントにログイン</a>
           <a class="form__btn" v-else @click.prevent="submitForm()">アカウントを作成する</a>
         </div>
@@ -67,7 +66,10 @@ export default {
     };
   },
   methods: {
-    /* Create User Account  */
+
+    /*
+    バリデーションが通れば新規ユーザー登録のリクエストを送信後にログイン。
+    */
     async submitForm() {
 
     if(this.validation(this.email,this.password,this.name)) {
@@ -87,7 +89,9 @@ export default {
              this.login();
         }
     },
-
+    /*
+    ユーザー情報のバリデーション
+    */
     validation(email,password,name) {
         if(!this.mailCheck(email) || this.password.length< 8　||  this.name == ""){
             alert('メールアドレスを間違えているか、パスワードが8文字以下です(゜ロ゜)')
@@ -96,6 +100,9 @@ export default {
         return true;
     },
 
+    /*
+    入力情報を元にログイン処理、エラーが起きればアラートを表示。
+    */
     async login() {
       try {
         await this.$auth.loginWith("local", {
@@ -111,7 +118,9 @@ export default {
     },
 
 
-    //入力された内容がメールアドレスの形をしているかどうかチェック
+    /*
+    メールアドレスのバリデーション。
+    */
     mailCheck( mail ) {
     let mail_regex1 = new RegExp( '(?:[-!#-\'*+/-9=?A-Z^-~]+\.?(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*|"(?:[!#-\[\]-~]|\\\\[\x09 -~])*")@[-!#-\'*+/-9=?A-Z^-~]+(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*' );
     let mail_regex2 = new RegExp( '^[^\@]+\@[^\@]+$' );

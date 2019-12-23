@@ -38,15 +38,12 @@ export default {
       user: ""
     };
   },
-
+  /*
+  全ユーザーのデータを取得
+   */
   created: async function() {
     let userData = await this.$axios.get("/users");
     this.userList = userData.data;
-    console.log(this.userList);
-  },
-
-  computed: {
-    userLink() {}
   }
 };
 </script>

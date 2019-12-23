@@ -17,7 +17,7 @@
         </nuxt-link>
         <div class="header__user" v-if="this.$auth.loggedIn">
           <a class="header__toggleList" @click.prevent="open()" v-click-outside="close">
-            <img src="../assets/img/penguin.svg" alt="user-icon" class="header__icon" />
+            <img :src="getIcon()" alt="user-icon" class="header__icon" />
             <font-awesome-icon
               icon="caret-up"
               class="header__toggle-icon"
@@ -56,7 +56,24 @@ export default {
   data() {
     return {
       clicked: false,
-      nippoAmount: 0
+      nippoAmount: 0,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
   directives: {
@@ -67,17 +84,42 @@ export default {
   },
 
   methods: {
+    /*
+    トグルリストを表示。
+    */
     open() {
       this.clicked = true;
     },
 
+    /*
+    保存しているトークン、ユーザーデータを破棄。
+    */
     logout() {
       this.$auth.logout();
     },
+    /*
+    トグルリストを非表示
+    */
     close() {
       this.clicked = false;
+    },
+
+    getIcon() {
+      console.log(this.$auth.user.id);
+      if (this.$auth.user.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.$auth.user.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.$auth.user.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.$auth.user.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   },
+
   beforeRouteLeave() {
     this.clicked = false;
   }

@@ -2,7 +2,10 @@
   <section class="setting">
     <div class="setting__wrapper">
       <form action class="setting__form">
-        <h2 class="setting__title">{{this.$auth.user.name}}/ アカウント</h2>
+        <div class="setting__user-info">
+          <img :src="getIcon()" class="setting__icon" alt="user-icon" />
+          <h2 class="setting__title">{{this.$auth.user.name}} / アカウント</h2>
+        </div>
 
         <div class="setting__box">
           <label class="setting__label" for="user-name">ユーザー名</label>
@@ -36,11 +39,31 @@ export default {
     return {
       email: this.$auth.user.email,
       name: this.$auth.user.name,
-      password: this.$auth.user.password
+      password: this.$auth.user.password,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
 
   methods: {
+    /*
+    バリデーションを通れば、ユーザーの情報を更新する。
+     */
     async updateUserInfo() {
       if (
         this.mailCheck(this.email) ||
@@ -63,13 +86,17 @@ export default {
         }
       }
     },
-
+    /*
+    ユーザーをデータベースから完全に削除する。
+    */
     async deleteUser() {
       let res = await this.$axios.delete("/users/" + this.$auth.user.id);
       this.$auth.logout();
       console.log(res);
     },
-
+    /*
+    メールのバリデーション確認。
+    */
     mailCheck(mail) {
       let mail_regex1 = new RegExp(
         "(?:[-!#-'*+/-9=?A-Z^-~]+.?(?:.[-!#-'*+/-9=?A-Z^-~]+)*|\"(?:[!#-[]-~]|\\\\[\x09 -~])*\")@[-!#-'*+/-9=?A-Z^-~]+(?:.[-!#-'*+/-9=?A-Z^-~]+)*"
@@ -89,6 +116,21 @@ export default {
         return true;
       } else {
         return false;
+      }
+    },
+
+    getIcon() {
+      console.log(this.$auth.user.id);
+      if (this.$auth.user.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.$auth.user.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.$auth.user.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.$auth.user.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
       }
     }
   }
@@ -149,12 +191,19 @@ $xsm: 614px;
       width: 70%;
       padding: 32px;
     }
-
-    @include xsm {
-    }
+  }
+  &__icon {
+    max-width: 50px;
+    margin-right: 8px;
   }
   &__title {
     font-size: 24px;
+  }
+
+  &__user-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__label {

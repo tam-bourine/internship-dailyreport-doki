@@ -2,7 +2,7 @@
   <article class="nippo">
     <div class="nippo__wrapper">
       <div class="nippo__user">
-        <img src="../assets/img/nippo__icon.svg" alt="user-icon" class="nippo__user-icon" />
+        <img :src="getIcon()" alt="user-icon" class="nippo__user-icon" />
       </div>
       <div class="nippo__content">
         <div class="nippo__info">
@@ -26,9 +26,9 @@
         <div class="nippo__bottom">
           <div class="nippo__tags">
             <ul class="nippo__tag-lists">
-              <a class="nippo__tag">php</a>
-              <a class="nippo__tag">html</a>
-              <a class="nippo__tag">css</a>
+              <li class="nippo__tag">html</li>
+              <li class="nippo__tag">css</li>
+              <li class="nippo__tag">javascirpt</li>
             </ul>
           </div>
 
@@ -54,24 +54,71 @@ export default {
   data() {
     return {
       admin: false,
-      likes: 0
+      likes: 0,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
   methods: {
+    /*
+    いいねボタン処理
+     */
     handleClick() {
       alert("you liked ~ tweet");
     },
 
+    /*
+    ストア内に編集データを送信/エディーターページに移行
+    */
     editPost() {
       this.$store.commit("setDraft", this.script);
       this.$store.commit("setDraftId", this.articleId);
       this.$router.push("editor");
     },
+    /*
+    指定したidの記事を削除した後、画面を更新する
+     */
     async deletePost() {
       const res = await this.$axios.delete("/posts/" + this.articleId);
       this.$emit("update");
+    },
+
+    /*
+    idの倍数に応じてアイコンを返す
+     */
+    getIcon() {
+      if (this.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   },
+
+  /*
+　記事がログインユーザーのidと一致すれば編集,削除ボタンを表示する。
+  */
   created: function() {
     if (this.$auth.user.id == this.id) this.admin = true;
     /* const res = await this.$axios.get() */
@@ -120,7 +167,7 @@ $xsm: 528px;
     width: 10%;
     text-align: center;
     &-icon {
-      max-width: 50px;
+      max-width: 44px;
     }
   }
   &__content {
