@@ -150,6 +150,29 @@ html,
 body {
   background-color: #eee;
 }
+
+$tab: 993px;
+$sm: 740px;
+$xsm: 614px;
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin xsm {
+  @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
 .home {
   background-color: #eee;
   &__wrapper {
@@ -167,11 +190,34 @@ body {
 
   &__center {
     width: 580px;
+    @include tab {
+      width: 70%;
+    }
+
+    @include sm {
+      width: 68%;
+    }
+
+    @include xsm {
+      margin: 0 auto;
+      width: 90%;
+    }
   }
 
+  &__left {
+    @media screen {
+    }
+
+    @include xsm {
+      display: none;
+    }
+  }
   &__right {
     margin-left: 16px;
     width: 300px;
+    @include tab {
+      display: none;
+    }
   }
   &__card {
     margin-top: 16px;
@@ -194,6 +240,10 @@ body {
     flex-direction: column;
     text-align: left;
     width: 200px;
+
+    @include sm {
+      width: 150px;
+    }
   }
 
   &__sort-list {
@@ -203,6 +253,11 @@ body {
     font-size: 12px;
     cursor: pointer;
     margin-top: 8px;
+
+    @include sm {
+      font-size: 10px;
+      padding: 10px 30px 10px 20px;
+    }
 
     &:hover {
       transition: 0.3s;

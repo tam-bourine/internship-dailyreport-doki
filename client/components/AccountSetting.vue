@@ -1,29 +1,31 @@
 <template>
   <section class="setting">
     <div class="setting__wrapper">
-      <h2 class="setting__title">{{this.$auth.user.name}}/ アカウント</h2>
+      <form action class="setting__form">
+        <h2 class="setting__title">{{this.$auth.user.name}}/ アカウント</h2>
 
-      <div class="setting__box">
-        <label class="setting__label" for="user-name">ユーザー名</label>
-        <input class="setting__input" type="text" id="user-name" v-model="name" />
-      </div>
+        <div class="setting__box">
+          <label class="setting__label" for="user-name">ユーザー名</label>
+          <input class="setting__input" type="text" id="user-name" v-model="name" />
+        </div>
 
-      <div class="setting__box">
-        <label class="setting__label" for="user-email">メールアドレス</label>
-        <input class="setting__input" type="email" id="user-email" v-model="email" />
-      </div>
-      <div class="setting__box">
-        <label class="setting__label" for="user-password">パスワードの変更</label>
-        <input
-          class="setting__input"
-          type="password"
-          id="user-password"
-          :place-holder="password"
-          v-model="password"
-        />
-        <a class="setting__btn" 　@click.prevent="updateUserInfo">更新する</a>
-        <a class="setting__btn btn--warning" 　@click.prevent="deleteUser">アカウントを削除</a>
-      </div>
+        <div class="setting__box">
+          <label class="setting__label" for="user-email">メールアドレス</label>
+          <input class="setting__input" type="email" id="user-email" v-model="email" />
+        </div>
+        <div class="setting__box">
+          <label class="setting__label" for="user-password">パスワードの変更</label>
+          <input
+            class="setting__input"
+            type="password"
+            id="user-password"
+            :place-holder="password"
+            v-model="password"
+          />
+          <a class="setting__btn" 　@click.prevent="updateUserInfo">更新する</a>
+          <a class="setting__btn btn--warning" 　@click.prevent="deleteUser">アカウントを削除</a>
+        </div>
+      </form>
     </div>
   </section>
 </template>
@@ -94,6 +96,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$tab: 993px;
+$sm: 740px;
+$xsm: 614px;
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin xsm {
+  @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
 .setting {
   font-family: "Noto Sans JP", sans-serif;
   background-color: #eee;
@@ -105,15 +129,30 @@ export default {
   bottom: 0;
   &__wrapper {
     margin-top: 30px;
-    background-color: #fff;
-    border: 1px solid #e5e5e5;
-    padding: 64px 0;
     max-width: 720px;
     margin: 0 auto;
     text-align: center;
     border-radius: 8px;
-  }
 
+    @include sm {
+      max-width: 500px;
+      padding: 32px 0;
+    }
+  }
+  &__form {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    margin: 0 auto;
+    padding: 64px;
+
+    @include sm {
+      width: 70%;
+      padding: 32px;
+    }
+
+    @include xsm {
+    }
+  }
   &__title {
     font-size: 24px;
   }
@@ -154,6 +193,9 @@ export default {
     border-radius: 4px;
     cursor: pointer;
     background-color: #5679e8;
+    @include sm {
+      font-size: 14px;
+    }
     &:hover {
       opacity: 0.7;
       transition: 0.3s;

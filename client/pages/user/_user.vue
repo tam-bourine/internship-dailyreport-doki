@@ -109,6 +109,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$tab: 993px;
+$sm: 740px;
+$xsm: 614px;
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin xsm {
+  @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
 .user {
   background-color: #eee;
   &__wrapper {
@@ -116,20 +138,48 @@ export default {
     margin: 0 auto;
     display: flex;
     padding: 77px 0;
+
+    @include tab {
+      margin: 0;
+    }
   }
   &__left {
-    width: 30%;
+    width: 25%;
     text-align: center;
     padding: 0 3% 3% 3%;
+    @include tab {
+      display: none;
+    }
   }
 
   &__right {
-    width: 70%;
+    max-width: 70%;
+    @include tab {
+      margin: 0;
+      margin-left: 50px;
+    }
+
+    @include xsm {
+      margin: 0 auto;
+      max-width: 90%;
+    }
+  }
+  &__center {
+    @include tab {
+      max-width: 70%;
+    }
+    @include xsm {
+      display: none;
+    }
   }
 
   &__img {
     max-width: 250px;
     border-radius: 16px;
+    @include xsm {
+      max-width: 72px;
+      margin-right: 8px;
+    }
   }
 
   &__description {
@@ -154,22 +204,6 @@ export default {
 }
 
 .home {
-  &__sort-list {
-    display: inline-block;
-    list-style: none;
-    padding: 10px 40px;
-    font-size: 12px;
-    margin-top: 8px;
-
-    &:hover {
-      transition: 0.3s;
-
-      background-color: #b8b8b8;
-    }
-    &:nth-child(1) {
-      margin-top: 0;
-    }
-  }
   &__sort {
     position: sticky;
     top: 66px;
@@ -178,6 +212,32 @@ export default {
     flex-direction: column;
     text-align: left;
     width: 200px;
+
+    @include sm {
+      width: 150px;
+    }
+  }
+
+  &__sort-list {
+    display: inline-block;
+    list-style: none;
+    padding: 10px 40px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 8px;
+
+    @include sm {
+      font-size: 10px;
+      padding: 10px 30px 10px 20px;
+    }
+
+    &:hover {
+      transition: 0.3s;
+      background-color: #b8b8b8;
+    }
+    &:nth-child(1) {
+      margin-top: 0;
+    }
   }
 
   &__list-icon {

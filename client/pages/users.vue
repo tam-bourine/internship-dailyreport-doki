@@ -52,14 +52,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$tab: 1077px;
+$sm: 524px;
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
 .users {
   background-color: #eee;
-
+  padding-bottom: 20px;
   &__wrapper {
     padding-top: 77px;
     max-width: 1040px;
     display: flex;
     margin: 0 auto;
+    @include tab {
+      flex-direction: column;
+      max-width: 900px;
+    }
   }
   &__word {
     margin-top: 8px;
@@ -71,19 +88,36 @@ export default {
     background-color: #fff;
     margin-right: 16px;
     height: 100%;
+    border-radius: 8px;
+
+    @include tab {
+      width: 70%;
+      margin: 0 auto;
+    }
   }
 
   &__right {
     width: 70%;
+    margin: 0 auto;
+    @include tab {
+      margin-top: 16px;
+    }
   }
   &__title {
     font-size: 24px;
     text-align: center;
+
+    @include sm {
+      font-size: 20px;
+    }
   }
   &__description {
     margin-top: 16px;
     line-height: 1.5;
     font-size: 16px;
+    @include sm {
+      font-size: 14px;
+    }
   }
 
   &__user {

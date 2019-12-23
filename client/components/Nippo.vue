@@ -58,6 +58,10 @@ export default {
     };
   },
   methods: {
+    handleClick() {
+      alert("you liked ~ tweet");
+    },
+
     editPost() {
       this.$store.commit("setDraft", this.script);
       this.$store.commit("setDraftId", this.articleId);
@@ -76,6 +80,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$tab: 993px;
+$sm: 614px;
+$xsm: 528px;
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin xsm {
+  @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
 .nippo {
   max-width: 560px;
   padding: 10px;
@@ -83,6 +108,9 @@ export default {
   background-color: white;
   border-radius: 10px;
   text-align: left;
+  @include tab {
+    max-width: 100%;
+  }
   // box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   &__wrapper {
     display: flex;
@@ -98,13 +126,25 @@ export default {
   &__content {
     width: 90%;
     padding: 8px;
+
+    @include xsm {
+      padding-top: 0;
+    }
   }
 
   &__info {
     display: flex;
     align-items: center;
+
+    @include xsm {
+      justify-content: space-around;
+    }
     &:nth-child(1) time {
       margin-left: 16px;
+      @include xsm {
+        font-size: 14px;
+        margin-left: 8px;
+      }
     }
   }
 
@@ -163,6 +203,11 @@ export default {
     font-size: 10px;
     width: 56px;
 
+    @include xsm {
+      padding: 5px 0;
+      width: 40px;
+    }
+
     &:hover {
       opacity: 0.7;
       transition: 0.3s;
@@ -174,6 +219,10 @@ export default {
 
     &-icon {
       font-size: 15px;
+
+      @include xsm {
+        font-size: 13px;
+      }
     }
   }
 
