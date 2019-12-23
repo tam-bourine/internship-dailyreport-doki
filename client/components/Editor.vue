@@ -53,8 +53,7 @@
             cols="30"
             v-model="script"
             rows="10"
-            placeholder="今日の日報をMarkdown記法で書いて共有しよう
-
+            placeholder="今日の日報をMarkdown記法で書いて共有しよう！
 <見出し>
 # 見出し 1
 ## 見出し 2
@@ -260,6 +259,7 @@ export default {
     this.script = this.$store.getters.getDraft;
     if (this.$store.getters.getDraftId != undefined) {
         this.edit = true;
+        this.selected = 1;
         }
   },
 
@@ -271,13 +271,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$tab: 787px;
+$sm:727px;
+$xs:528px;
+
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+    @media (max-width:($sm)) {
+        @content;
+    }
+}
+
+@mixin xs {
+    @media (max-width:($xs)) {
+        @content;
+    }
+}
+
+
 input[type="text"],
 input[type="password"],
 textarea,
 select {
   outline: 0;
 }
-
 a:hover {
   cursor: pointer;
 }
@@ -292,7 +315,7 @@ a:hover {
   z-index: 0;
   overflow: hidden;
   &__wrapper {
-    padding: 10px;
+    padding: 12px;
     max-width: 100%;
     height: 88%;
   }
@@ -305,6 +328,7 @@ a:hover {
     &:nth-child(2) {
       margin-top: 10px;
     }
+
   }
 
   &__title {
@@ -313,6 +337,9 @@ a:hover {
 
   &__tag {
     font-size: 14px;
+    @include xs {
+        font-size:12px;
+    }
   }
 
   &__content {
@@ -348,6 +375,7 @@ a:hover {
   &__preview-render {
     padding: 16px;
     width: 100%;
+
     height: 100%;
     background-color: #fff;
     overflow: auto;
@@ -363,10 +391,18 @@ a:hover {
   &__bar-left {
     display: flex;
     background-color: #f7f7f7;
+    @include xs {
+        display: none;
+    }
   }
 
   &__bar-right {
+
     padding-left: 8px;
+    @include xs {
+        &:nth-child(2) {
+        }
+    }
   }
 
   &__bar-title {
@@ -374,6 +410,10 @@ a:hover {
     color: #999999;
     background-color: white;
     padding: 8px 24px;
+    @include sm {
+        font-size:10px;
+        padding:8px 12px;
+    }
   }
 
   &__bar-link {
@@ -394,6 +434,17 @@ a:hover {
     &:hover {
       color: black;
     }
+
+    @include tab {
+        margin-right: 6px;
+        font-size:16px;
+    }
+
+    @include sm {
+        font-size:16px;
+        margin-right: 2px;
+    }
+
   }
 
   &__footer {
@@ -504,6 +555,10 @@ a:hover {
     transform: rotate(-25deg);
     opacity: 0.7;
     background-size: contain;
+    @include sm {
+        width: 35px;
+        height: 35px;
+    }
   }
 
   &__helper-text {
@@ -513,6 +568,11 @@ a:hover {
     left: 50px;
     position: absolute;
     transform: rotate(25deg);
+    @include sm {
+        top:70px;
+        left:20px;
+        font-size:14px;
+    }
   }
 }
 
@@ -530,6 +590,9 @@ a:hover {
 
 .md-body {
   font-size: 14px;
+  @include sm {
+      font-size:10px;
+  }
 }
 
 .scale {

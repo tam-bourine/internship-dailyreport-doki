@@ -87,6 +87,19 @@ export default {
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap");
 
+$tab: 614px;
+$sm: 528px;
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
 .header {
   font-family: "Noto Sans JP", sans-serif;
   background-color: #5679e8;
@@ -111,21 +124,40 @@ export default {
       opacity: 0.8;
       transform: 0.3s;
     }
+
+    @include tab {
+      font-size: 14px;
+      margin-left: 14px;
+    }
+
+    @include sm {
+      font-size: 12px;
+      margin-left: 10px;
+    }
   }
   &__box {
     display: flex;
     align-items: center;
     &:nth-child(2) {
       margin-right: 20px;
+      @include sm {
+        margin-right: 8px;
+      }
     }
   }
   &__title {
     max-width: 180px;
     vertical-align: sub;
+    @include tab {
+      max-width: 130px;
+    }
   }
 
   &__icon {
     max-width: 30px;
+    @include tab {
+      max-width: 20px;
+    }
   }
 
   &__btn {
@@ -147,6 +179,10 @@ export default {
     max-width: 30px;
     margin-right: -15px;
     transform: rotate(20deg);
+    @include tab {
+      max-width: 20px;
+      margin-right: -8px;
+    }
   }
 
   &__user {
