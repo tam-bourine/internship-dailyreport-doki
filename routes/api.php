@@ -23,6 +23,8 @@ Route::group(['middleware' =>['auth:api']], function(){
 });
 Route::middleware('api')->post('users', 'Api\UserController@store');
 Route::middleware('auth:api')->get('/user', 'Api\UserController@show');
+Route::middleware('auth:api')->post('users/{user}/comment', 'Api\UserController@registerComment');
+
 
 // POST
 Route::group(['middleware' =>['auth:api']], function(){

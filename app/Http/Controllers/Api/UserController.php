@@ -91,4 +91,15 @@ class UserController extends Controller
             throw new AuthorizationException('you are not allowed to delete');
         }
     }
+
+    public function registerComment(Request $request, User $user)
+    {
+        $token = $request->bearerToken();
+        if ($user->api_token == $token) {
+            $user->comment = $request->comment;
+            $user->save();
+        } else {
+            throw new AuthorizationException('you are not allowed to comment');
+        }
+    }
 }
