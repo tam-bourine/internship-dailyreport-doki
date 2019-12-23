@@ -219,10 +219,10 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 
 ### いいね
 
-**POST** api/posts/{post_id}/users/{user_id}
+**POST** api/posts/{post_id}/likes/{user_id}
 いいねする
 
-**DELETE** api/posts/{post_id}/users/{user_id}
+**DELETE** api/posts/{post_id}/likes/{user_id}
 いいね取り消し
 
 ### タグ  
