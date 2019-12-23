@@ -2,7 +2,7 @@
   <section class="user">
     <div class="user__wrapper">
       <div class="user__left">
-        <img src="../../assets/img/nippo__icon.svg" alt class="user__img" />
+        <img :src="getIcon()" alt class="user__img" />
         <h2 class="user__name">{{this.name}}</h2>
         <p class="user__description">たい焼きを食べるのが大好きな大学生です。</p>
       </div>
@@ -72,37 +72,81 @@ export default {
       articles: [],
       name: "manaki",
       listActive: [true, false, false],
-      admin: false
+      admin: false,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
 
   methods: {
+    /*
+    記事を新しい順に並び替え
+    */
     sortByLatest() {
       return this.articles.sort((a, b) => {
         return a.date < b.date ? 1 : -1;
       });
     },
 
+    /*
+    記事を更新順に並び替え
+    */
     sortByUpdated() {
       return this.articles.sort((a, b) => {
         return a.updated_at < b.updated_at ? 1 : -1;
       });
     },
-
+    /*
+    記事を古い順に並び替え
+    */
     sortByOldest() {
       return this.articles.sort((a, b) => {
         return a.date > b.date ? 1 : -1;
       });
     },
 
+    /*
+    並び替え機能の切り替え
+    */
     switchActiveList(listIndex) {
       this.listActive = [false, false, false];
       this.listActive[listIndex] = true;
     },
+    /*
+    データベースから最新の投稿データを取得
+     */
     async updateList() {
       let draftData = await this.$axios.get("/posts/" + this.$auth.id);
       this.articles = draftData.data;
       this.articles = this.sortByLatest();
+    },
+    getIcon() {
+      if (this.$auth.user.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.$auth.user.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.$auth.user.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.$auth.user.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   }
 };
@@ -145,6 +189,9 @@ $xsm: 614px;
   }
   &__left {
     width: 25%;
+    background-color: #fff;
+    height: 100%;
+    margin-right: 16px;
     text-align: center;
     padding: 0 3% 3% 3%;
     @include tab {

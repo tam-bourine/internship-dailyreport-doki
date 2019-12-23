@@ -28,8 +28,6 @@ export default {
   created() {
     if (!this.$auth.loggedIn) {
       redirect("/login");
-    } else {
-      console.log("you are logged in");
     }
   }
 };

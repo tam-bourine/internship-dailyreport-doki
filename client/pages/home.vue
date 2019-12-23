@@ -52,7 +52,7 @@
 
         <div class="home__profile">
           <div class="home__profile-info">
-            <img class="home__logo" src="../assets/img/nippo__icon.svg" alt="profile-icon" />
+            <img class="home__logo" :src="getIcon()" alt="profile-icon" />
             <a class="home__name">
               {{this.$auth.user.name}}
               <br />
@@ -95,51 +95,101 @@ export default {
       user: true,
       articles: [],
       listActive: [true, false, false],
-      nippoAmount: []
+      nippoAmount: 0,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
 
+  /*
+　最新の記事を取得、ユーザーの記事数をセット
+  */
   created: async function() {
     this.updateList();
     const nippo = await this.$axios.get("/posts/" + this.$auth.user.id);
     this.nippoAmount = nippo.data.length;
-    console.log("this is how many nippo you wrote", this.nippoAmount);
-    //if not logged in send user to login form or singup
   },
 
   methods: {
+    /*
+    記事を新しい順に並び替え
+    */
     sortByLatest() {
       return this.articles.sort((a, b) => {
         return a.created_at < b.created_at ? 1 : -1;
       });
     },
 
+    /*
+    記事を更新順に並び替え
+    */
     sortByUpdated() {
       return this.articles.sort((a, b) => {
         return a.updated_at < b.updated_at ? 1 : -1;
       });
     },
-
+    /*
+    記事を古い順に並び替え
+    */
     sortByOldest() {
       return this.articles.sort((a, b) => {
         return a.created_at > b.created_at ? 1 : -1;
       });
     },
 
+    /*
+    並び替え機能の切り替え
+    */
     switchActiveList(listIndex) {
       this.listActive = [false, false, false];
       this.listActive[listIndex] = true;
     },
 
+    /*
+    データベースから最新の投稿データを取得
+     */
     async updateList() {
       let draftData = await this.$axios.get("/posts");
       this.articles = draftData.data;
-
       this.articles = this.sortByLatest();
     },
 
-    callParent() {
-      alert("working emit");
+    /*
+    指定したタグを持った記事を抽出
+    */
+    filterTag(tag) {
+      this.articles = this.articles.filter(value => {
+        return value == tag;
+      });
+    },
+    getIcon() {
+      console.log(this.$auth.user.id);
+      if (this.$auth.user.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.$auth.user.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.$auth.user.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.$auth.user.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   }
 };

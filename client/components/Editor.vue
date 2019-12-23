@@ -187,7 +187,10 @@ export default {
   },
 
   methods: {
-    /* Test Post request */
+    /*
+    日報を投稿する。日報が空の場合は送信しない。
+    サーバーエラー発生時にアラートを表示。
+    */
     async postNippo() {
         if(this.script == '') {
             alert('何か書いてください！(# ﾟДﾟ)')
@@ -211,7 +214,10 @@ export default {
 
 
 
-
+    /*
+    読み込んだ日報を更新後にユーザーページに移行。日報が空の場合は送信しない。
+    サーバーエラー発生時にアラートを表示。
+    */
     async updateNippo() {
           if(this.script == '') {
             alert('何か書いてください！(# ﾟДﾟ)')
@@ -236,25 +242,34 @@ export default {
     },
 
 
+    /*
+    日報の下書きを保存する。
+    */
     saveNippo()
     {
         this.$store.commit('setDraft',this.script);
         alert('あなたの働きを保存しました∠(｀・ω・´)/')
     },
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
-    },
 
+    /*
+    右メニューを拡大。
+    */
     scaleLeft() {
       this.leftScale = !this.leftScale;
     },
 
+    /*
+    左メニューを拡大。
+    */
     scaleRight() {
       this.rightScale = !this.rightScale;
     }
 
 
   },
+  /*
+  下書きを読み込み、ストア内編集idに値があれば編集モードONにする。
+  */
   created: function() {
     this.script = this.$store.getters.getDraft;
     if (this.$store.getters.getDraftId != undefined) {
@@ -263,6 +278,9 @@ export default {
         }
   },
 
+    /*
+    ページ移行前に下書きを保存しておく。
+    */
     beforeRouteLeave:function() {
         this.$store.commit('setDraft',this.script);
     }
