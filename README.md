@@ -211,3 +211,66 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 
 **DELETE** api/posts/{post_id}/users/{user_id}
 いいね取り消し
+
+### タグ  
+
+***GET*** api/tags  
+タグの一覧表示  
+#### Response  
+```javascript
+[
+    {
+        "id": 1,
+        "name": "php",
+        "created_at": "2019-12-23 14:26:59",
+        "updated_at": "2019-12-23 14:26:59",
+        "post": [
+            {
+                "id": 1,
+                "user_id": 19,
+                "body": "Duck. 'Found IT,' the Mouse heard this, it.",
+                "created_at": "1988-06-23 00:00:00",
+                "updated_at": "1984-05-29 00:00:00",
+                "likes_count": 0,
+                "pivot": {
+                    "tag_id": 1,
+                    "post_id": 1
+                }
+            },
+            {
+```
+
+***POST*** api/posts/{post_id}/tags  
+送信されたタグと投稿を結びつける。登録されていなければ新規作成。  
+#### Request
+```javascript
+{ "name": "tagsname" }
+```
+
+***GET*** api/tags/{tag_id}  
+指定されたタグのついた投稿を全て返す。  
+#### Response
+```javascript
+[
+    {
+        "id": 2,
+        "name": "laravel",
+        "created_at": "2019-12-23 14:28:03",
+        "updated_at": "2019-12-23 14:28:03",
+        "post": [
+            {
+                "id": 1,
+                "user_id": 19,
+                "body": "Duck. 'Found IT,' the Mouse heard this, it.",
+                "created_at": "1988-06-23 00:00:00",
+                "updated_at": "1984-05-29 00:00:00",
+                "likes_count": 0,
+                "pivot": {
+                    "tag_id": 2,
+                    "post_id": 1
+                }
+            },
+```
+
+***DELETE*** api/tags/{tag_id}
+タグの削除  
