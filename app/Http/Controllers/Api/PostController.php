@@ -18,7 +18,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::with('user')->get();
+        $posts = Post::with(['user', 'likes', 'tags'])->get();
         return $posts;
     }
 
@@ -45,7 +45,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $posts = Post::with(['user', 'likes'])->where('user_id', $id)->get();
+        $posts = Post::with(['user', 'likes', 'tags'])->where('user_id', $id)->get();
         return $posts;
     }
 
