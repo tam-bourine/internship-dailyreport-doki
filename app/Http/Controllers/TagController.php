@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Tag;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class TagController extends Controller
 {
@@ -22,6 +24,18 @@ class TagController extends Controller
 
     public function store(Request $request, Post $post)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                'required',
+                'max:20',
+                Rule::unique('tags'),
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return "already exists";
+        }
+
         $tag = new Tag;
         $tag->name = $request->name;
         $tag->save();
@@ -30,6 +44,8 @@ class TagController extends Controller
         $tag2->post()->attach($tag->id);
         $tag2->post()->attach($tag->id);
         $tag2->save();
+
+        return "success";
     }
 
     public function destroy(Tag $tag)
