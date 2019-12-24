@@ -16,6 +16,12 @@
           <label class="setting__label" for="user-email">メールアドレス</label>
           <input class="setting__input" type="email" id="user-email" v-model="email" />
         </div>
+
+        <div class="setting__box">
+          <label class="setting__label" for="user-comment">ひとこと</label>
+          <input class="setting__input" type="text" id="user-comment" v-model="comment" />
+        </div>
+
         <div class="setting__box">
           <label class="setting__label" for="user-password">パスワードの変更</label>
           <input
@@ -40,6 +46,7 @@ export default {
       email: this.$auth.user.email,
       name: this.$auth.user.name,
       password: this.$auth.user.password,
+      comment: this.$auth.user.comment,
       icons: [
         {
           image: require("~/assets/img/giraffe.svg")
@@ -56,7 +63,8 @@ export default {
         {
           image: require("~/assets/img/penguin.svg")
         }
-      ]
+      ],
+      requesting: false
     };
   },
 
@@ -66,15 +74,16 @@ export default {
      */
     async updateUserInfo() {
       if (
-        this.mailCheck(this.email) ||
+        !this.mailCheck(this.email) ||
         this.name == "" ||
-        this.password.length < 8
+        !this.passwordCheck(this.password)
       ) {
         alert(
-          "メールアドレスを間違えているか、パスワードが8文字以下です(゜ロ゜)"
+          "入力内容に不備があります！(゜ロ゜)\n[確認]パスワード:８文字以上\n[確認]ひとこと20字以内\n[確認]正しいメールアドレス"
         );
         return;
       } else {
+        this.requesting = true;
         try {
           const res = await this.$axios.put("/users/" + this.$auth.user.id, {
             name: this.name,
@@ -84,15 +93,27 @@ export default {
         } catch (error) {
           alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)");
         }
+
+        const res2 = await this.$axios.post(
+          "/users/" + this.$auth.user.id + "/comment",
+          {
+            comment: this.comment
+          }
+        );
+
+        alert("ユーザー情報が更新されました！");
+        this.requesting = false;
       }
     },
     /*
     ユーザーをデータベースから完全に削除する。
     */
     async deleteUser() {
+      if (this.isRequesting()) return;
+      this.requesting = true;
       let res = await this.$axios.delete("/users/" + this.$auth.user.id);
+      this.isRequesting = false;
       this.$auth.logout();
-      console.log(res);
     },
     /*
     メールのバリデーション確認。
@@ -115,12 +136,40 @@ export default {
         }
         return true;
       } else {
+        console.log("wrong mail address");
+        return false;
+      }
+    },
+
+    passwordCheck(password) {
+      if (password != undefined) {
+        if (this.password.length >= 8) {
+          alert("return true");
+          return true;
+        } else {
+          alert("return false");
+          return false;
+        }
+      } else {
+        return false;
+      }
+    },
+
+    /*
+    Apiリクエスト中であれば新しいリクエストを無視する
+    連打防止用
+     */
+    isRequesting() {
+      if (this.requesting) {
+        alert("すでにリクエストを送っています！しばらくお待ちください(´·ω·`)");
+        return true;
+      } else {
         return false;
       }
     },
 
     getIcon() {
-      console.log(this.$auth.user.id);
+      console.log(this.$auth.user);
       if (this.$auth.user.id % 5 == 0) {
         return this.icons[0].image;
       } else if (this.$auth.user.id % 4 == 0) {

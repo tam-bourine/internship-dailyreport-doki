@@ -182,7 +182,8 @@ export default {
       rightScale: false,
       selected: 2,
       user: this.$auth.user,
-      edit:false
+      edit:false,
+      requesting:false
     };
   },
 
@@ -192,6 +193,8 @@ export default {
     サーバーエラー発生時にアラートを表示。
     */
     async postNippo() {
+        if(this.isRequesting()) return;
+
         if(this.script == ''　) {
             alert('何か書いてください！(# ﾟДﾟ)')
             return;
@@ -199,8 +202,7 @@ export default {
             alert("タグが入力されていませんよ！(ﾉﾟοﾟ)ﾉ ")
             return;
         }
-
-
+        this.requesting = true;
         try{
         var userId = await this.$axios.post("/posts", {
             name: this.user.name,
@@ -213,6 +215,7 @@ export default {
         }
 
        await this.postTag(userId.data);
+       this.requesting = false;
        alert('お疲れ様でした(o・ω・o)ゝ日報が投稿されましたよ！');
         this.$router.push('/home');
     },
@@ -222,10 +225,13 @@ export default {
     サーバーエラー発生時にアラートを表示。
     */
     async updateNippo() {
+        if(this.isRequesting()) return;
+
           if(this.script == '') {
             alert('何か書いてください！(# ﾟДﾟ)')
             return;
         }
+        this.requesting = true;
 
         try{
             const res = await this.$axios.put('/posts/'+this.$store.getters.getDraftId, {
@@ -237,6 +243,7 @@ export default {
             alert("サーバー側でエラーが発生している可能性があります(´・ω・`)¥n しばらく待ってからもう一度試してみてください！");
             return;
         }
+        this.requesting =false;
          alert('お疲れ様でした(o・ω・o)ゝ日報が更新されましたよ！');
 
         this.$store.commit('setDraft','');
@@ -254,16 +261,25 @@ export default {
         alert('あなたの働きを保存しました∠(｀・ω・´)/')
     },
 
+        /*
+    Apiリクエスト中であれば新しいリクエストを無視する
+    連打防止用
+     */
+    isRequesting() {
+      if (this.requesting) {
+        alert("すでにリクエストを送っています！しばらくお待ちください(´·ω·`)");
+        return true;
+      } else {
+        return false;
+      }
+    },
+
 
     async postTag(nippoId) {
         const res =  await this.$axios.post("/posts/"+nippoId+"/tags",{
             name:this.tag
         });
-        console.log("done post tag");
 },
-
-
-
     /*
     右メニューを拡大。
     */

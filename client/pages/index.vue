@@ -27,8 +27,9 @@ export default {
 
   created() {
     if (!this.$auth.loggedIn) {
-      //      this.$route.push("/login");
+      this.$router.push("/login");
     } else {
+      this.$router.push("/home");
     }
   }
 };
