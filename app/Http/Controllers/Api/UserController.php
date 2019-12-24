@@ -102,4 +102,10 @@ class UserController extends Controller
             throw new AuthorizationException('you are not allowed to comment');
         }
     }
+
+    public function show_by_id($id)
+    {
+        $user = User::where("id", $id)->first();
+        return $user;
+    }
 }

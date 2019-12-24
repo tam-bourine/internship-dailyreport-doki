@@ -22,8 +22,9 @@ Route::group(['middleware' =>['auth:api']], function(){
     Route::resource('users', 'Api\UserController', ['except' => ['create', 'edit', 'store', 'show']]);
 });
 Route::middleware('api')->post('users', 'Api\UserController@store');
-Route::middleware('auth:api')->get('/user', 'Api\UserController@show');
+Route::middleware('auth:api')->get('user', 'Api\UserController@show');
 Route::middleware('auth:api')->post('users/{user}/comment', 'Api\UserController@registerComment');
+Route::middleware('auth:api')->get('users/{id}', 'Api\UserController@show_by_id');
 
 
 // POST
