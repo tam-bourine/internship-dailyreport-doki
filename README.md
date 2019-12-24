@@ -211,3 +211,13 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 
 **DELETE** api/posts/{post_id}/users/{user_id}
 いいね取り消し
+
+### ユーザーひとこと
+
+**POST** api/users/{user}/comment  
+ユーザーのひとことを追加する  
+
+#### Request
+```javascript
+{ "comment": "hitokoto" }
+```
