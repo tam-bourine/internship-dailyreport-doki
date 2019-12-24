@@ -26,7 +26,6 @@ class TagController extends Controller
     public function store(Request $request, Post $post)
     {
         foreach($request->tags as $tag){
-            var_dump($tag);
             $existence = Tag::where('name', $tag)->first();
 
             if (empty($existence)) {
