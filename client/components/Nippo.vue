@@ -94,7 +94,7 @@ export default {
     いいねボタン処理
      */
     async handleClick() {
-      if (!this.isRequesting) return;
+      if (this.isRequesting()) return;
       this.requesting = true;
 
       if (!this.liked) {
@@ -125,7 +125,7 @@ export default {
     指定したidの記事を削除した後、画面を更新する
      */
     async deletePost() {
-      if (!this.isRequesting) return;
+      if (this.isRequesting()) return;
 
       this.requesting = true;
       const res = await this.$axios.delete("/posts/" + this.articleId);

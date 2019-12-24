@@ -4,7 +4,8 @@
       <div class="user__left">
         <img :src="getIcon()" alt class="user__img" />
         <h2 class="user__name">{{this.name}}</h2>
-        <p class="user__description">たい焼きを食べるのが大好きな大学生です。</p>
+        <p class="user__description" v-if="this.comment">{{this.comment}}</p>
+        <p v-else class="user__description">設定からひとことを追加しよう！</p>
       </div>
 
       <div class="user__right" v-if="!rom">
@@ -66,12 +67,15 @@ export default {
 
   created: async function() {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
+    console.log(userPost);
     this.articles = userPost.data;
     this.articles = this.sortByLatest();
     if (this.articles.length == 0) {
       this.rom = true;
     } else {
       this.name = this.articles[0].user.name;
+
+      this.comment = this.articles[0].user.comment;
       //ログインユーザのページが開かれている場合
       this.admin = true;
     }
@@ -80,7 +84,7 @@ export default {
     return {
       root: this.$route.params.user,
       articles: [],
-      name: "manaki",
+      name: "",
       listActive: [true, false, false],
       admin: false,
       rom: false,

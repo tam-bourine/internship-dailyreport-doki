@@ -114,7 +114,8 @@ export default {
         {
           image: require("~/assets/img/penguin.svg")
         }
-      ]
+      ],
+      requesting: false
     };
   },
 
@@ -192,6 +193,19 @@ export default {
         return this.icons[3].image;
       } else {
         return this.icons[4].image;
+      }
+    },
+
+    /*
+    Apiリクエスト中であれば新しいリクエストを無視する
+    連打防止用
+     */
+    isRequesting() {
+      if (this.requesting) {
+        alert("すでにリクエストを送っています！しばらくお待ちください(´·ω·`)");
+        return true;
+      } else {
+        return false;
       }
     }
   }

@@ -105,7 +105,6 @@ export default {
     },
 
     getIcon() {
-      console.log(this.$auth.user.id);
       if (this.$auth.user.id % 5 == 0) {
         return this.icons[0].image;
       } else if (this.$auth.user.id % 4 == 0) {

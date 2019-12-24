@@ -20,7 +20,8 @@
                   :to="{name: 'user-user', params: {user:user.id}}"
                   class="users__name"
                 >{{user.name}}</nuxt-link>
-                <p class="users__word">{{user.comment}}</p>
+                <p class="users__word" v-if="user.comment">{{user.comment}}</p>
+                <p class="users__word" v-else>設定からひとことを追加しよう！</p>
               </div>
             </div>
           </li>

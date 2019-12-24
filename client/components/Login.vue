@@ -63,14 +63,7 @@ export default {
       password: "",
       name: "",
       checked: false,
-      randomComment: [
-          "最近はおでんにはまっていて、大根がおでん界の王様だと考えている。",
-          "空を眺めているのが大好きで日中は地元の川の河川敷で見つかることが多い。",
-          "人間に見えるかもしれないがこう見えてれっきとしたフンボルトペンギンである。",
-          "無類のお肉好きであり週末には必ずと言って良いほど焼肉屋に通っている。",
-          "苦手な食べ物はないけど、好きなものもない今日この頃",
-      ]
-
+      requesting: false
     };
   },
   methods: {
@@ -79,8 +72,10 @@ export default {
     バリデーションが通れば新規ユーザー登録のリクエストを送信後にログイン。
     */
     async submitForm() {
+      if (this.isRequesting()) return;
 
     if(this.validation(this.email,this.password,this.name)) {
+        this.requesting = true;
         try {
 
             const token = await this.$axios.post("/users", {
@@ -95,6 +90,7 @@ export default {
             alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
             return
         }
+        this.requesting=false;
              this.login();
 
 
@@ -111,16 +107,24 @@ export default {
         return true;
     },
 
-    getRandomComment() {
-        let randomComment = Math.floor( Math.random() * this.randomComment.length );
-        return randomComment;
+    /*
+    Apiリクエスト中であれば新しいリクエストを無視する
+    連打防止用
+     */
+    isRequesting() {
+      if (this.requesting()) {
+        alert("すでにリクエストを送っています！しばらくお待ちください(´·ω·`)");
+        return true;
+      } else {
+        return false;
+      }
     },
-
 
     /*
     入力情報を元にログイン処理、エラーが起きればアラートを表示。
     */
     async login() {
+        if(this,isRequesting())
       try {
         await this.$auth.loginWith("local", {
           data: {
