@@ -89,6 +89,9 @@ $ php artisan migrate --seed
  }
 ```
 
+**GET** api/users/{id}  
+指定されたidのユーザーを返す  
+
 **POST** api/users  
 新規ユーザー登録  
 #### Request
