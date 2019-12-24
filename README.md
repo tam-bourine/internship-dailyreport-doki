@@ -270,7 +270,7 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 送信されたタグと投稿を結びつける。登録されていなければ新規作成。  
 #### Request
 ```javascript
-{ "name": "tagsname" }
+{ "tags": ["php", "html", "css"] }
 ```
 
 ***GET*** api/tags/{tag_id}  
