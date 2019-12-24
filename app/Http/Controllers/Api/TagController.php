@@ -23,31 +23,23 @@ class TagController extends Controller
         return $tag;
     }
 
-    // fixme: validationがうまくいっていません
     public function store(Request $request, Post $post)
     {
-        $validator = Validator::make($request->all(), [
-            'tags.*' => [
-                'required',
-                'max:20',
-                Rule::unique('tags'),
-            ]
-        ]);
-
         foreach($request->tags as $tag){
-            if ($validator->fails()) {
+            var_dump($tag);
+            $existence = Tag::where('name', $tag)->first();
+
+            if (empty($existence)) {
+                $tag2 = new Tag;
+                $tag2->name = $tag;
+                $tag2->save();
+
+                $tag3 = Tag::where('name', $tag)->first();
+                $tag3->post()->attach($post->id);
+            } else {
                 $tag1 = Tag::where('name', $tag)->first();
                 $tag1->post()->attach($post->id);
-                return "already exists";
             }
-
-            $tag2 = new Tag;
-            $tag2->name = $tag;
-            $tag2->save();
-
-            $tag3 = Tag::where('name', $tag)->first();
-            $tag3->post()->attach($post->id);
-            return "success";
         };
     }
 
