@@ -26,26 +26,19 @@ class TagController extends Controller
     public function store(Request $request, Post $post)
     {
         foreach($request->tags as $tag){
-            $validator = Validator::make($tag, [
-                'name' => [
-                    'required',
-                    'max:20',
-                    'unique:tags'
-                ]
-            ]);
+            var_dump($tag);
+            $existence = Tag::where('name', $tag)->first();
 
-            if ($validator->fails()) {
-                $tag1 = Tag::where('name', $tag)->first();
-                $tag1->post()->attach($post->id);
-                return "already exists";
-            } else {
+            if (empty($existence)) {
                 $tag2 = new Tag;
                 $tag2->name = $tag;
                 $tag2->save();
 
                 $tag3 = Tag::where('name', $tag)->first();
                 $tag3->post()->attach($post->id);
-                return "success";
+            } else {
+                $tag1 = Tag::where('name', $tag)->first();
+                $tag1->post()->attach($post->id);
             }
         };
     }
