@@ -40,6 +40,31 @@ class PostController extends Controller
         $post->user_id = $user->id;
         $post->body = $request->body;
         $post->save();
+
+
+        // slack api
+        $headers = [
+            'Authorization: Bearer xoxp-885104827445-874848500673-887320582166-9b2162d299b6b5ddcec5893c160b125a',
+            'Content-Type: application/json;charset=utf-8'
+        ];
+        $url = "https://slack.com/api/chat.postMessage";
+        $post_fields = [
+            "channel" => "#testapi",
+            "text" => $user->name . "さんが日報を投稿しました。確認しにいきましょう！\nhttps://dreport-201912.herokuapp.com/users/".$user->id,
+            "as_user" => false
+        ];
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($post_fields)
+        ];
+        $ch = curl_init();
+        curl_setopt_array($ch, $options);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
         return $post->id;
     }
 
