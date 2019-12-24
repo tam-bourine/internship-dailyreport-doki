@@ -44,9 +44,10 @@ class PostController extends Controller
 
         // slack api
         $headers = [
-            'Authorization: Bearer '. config('slack.my-env'),
+            'Authorization: Bearer '.config('slack.my-env'),
             'Content-Type: application/json;charset=utf-8'
         ];
+
         $url = "https://slack.com/api/chat.postMessage";
         $post_fields = [
             "channel" => "#testapi",
