@@ -27,9 +27,8 @@ export default {
 
   created() {
     if (!this.$auth.loggedIn) {
-      redirect("/login");
+      //      this.$route.push("/login");
     } else {
-      console.log("you are logged in");
     }
   }
 };

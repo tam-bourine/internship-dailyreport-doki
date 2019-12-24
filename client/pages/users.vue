@@ -14,13 +14,13 @@
         <ul>
           <li class="users__list" v-for="user in userList" :key="user.description">
             <div class="users__user">
-              <img class="users__img" src="../assets/img/koala.svg" alt />
+              <img class="users__img" :src="getIcon(user.id)" alt="users-icon" />
               <div class="users__info">
                 <nuxt-link
                   :to="{name: 'user-user', params: {user:user.id}}"
                   class="users__name"
                 >{{user.name}}</nuxt-link>
-                <p class="users__word">{{user.description}}</p>
+                <p class="users__word">{{user.comment}}</p>
               </div>
             </div>
           </li>
@@ -35,31 +35,79 @@ export default {
   data() {
     return {
       userList: [],
-      user: ""
+      user: "",
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
-
+  /*
+  全ユーザーのデータを取得
+   */
   created: async function() {
     let userData = await this.$axios.get("/users");
     this.userList = userData.data;
-    console.log(this.userList);
   },
 
-  computed: {
-    userLink() {}
+  methods: {
+    getIcon(id) {
+      console.log(this.$auth.user.id);
+      if (id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$tab: 1077px;
+$sm: 524px;
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
 .users {
   background-color: #eee;
-
+  padding-bottom: 20px;
   &__wrapper {
     padding-top: 77px;
     max-width: 1040px;
     display: flex;
     margin: 0 auto;
+    @include tab {
+      flex-direction: column;
+      max-width: 900px;
+    }
   }
   &__word {
     margin-top: 8px;
@@ -71,19 +119,36 @@ export default {
     background-color: #fff;
     margin-right: 16px;
     height: 100%;
+    border-radius: 8px;
+
+    @include tab {
+      width: 70%;
+      margin: 0 auto;
+    }
   }
 
   &__right {
     width: 70%;
+    margin: 0 auto;
+    @include tab {
+      margin-top: 16px;
+    }
   }
   &__title {
     font-size: 24px;
     text-align: center;
+
+    @include sm {
+      font-size: 20px;
+    }
   }
   &__description {
     margin-top: 16px;
     line-height: 1.5;
     font-size: 16px;
+    @include sm {
+      font-size: 14px;
+    }
   }
 
   &__user {

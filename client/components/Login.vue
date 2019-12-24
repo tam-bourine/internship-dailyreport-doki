@@ -44,7 +44,6 @@
               v-model="password"
             />
           </div>
-
           <a class="form__btn" @click.prevent="login()" v-if="checked">アカウントにログイン</a>
           <a class="form__btn" v-else @click.prevent="submitForm()">アカウントを作成する</a>
         </div>
@@ -63,33 +62,93 @@ export default {
       email: "",
       password: "",
       name: "",
-      checked: false
+      checked: false,
+      randomComment: [
+          "最近はおでんにはまっていて、大根がおでん界の王様だと考えている。",
+          "空を眺めているのが大好きで日中は地元の川の河川敷で見つかることが多い。",
+          "人間に見えるかもしれないがこう見えてれっきとしたフンボルトペンギンである。",
+          "無類のお肉好きであり週末には必ずと言って良いほど焼肉屋に通っている。",
+          "苦手な食べ物はないけど、好きなものもない今日この頃",
+      ]
+
     };
   },
   methods: {
-    /* Create User Account  */
+
+    /*
+    バリデーションが通れば新規ユーザー登録のリクエストを送信後にログイン。
+    */
     async submitForm() {
-      const token = await this.$axios.post("/users", {
-        email: this.email,
-        password: this.password,
-        name: this.name
+
+    if(this.validation(this.email,this.password,this.name)) {
+        try {
+
+            const token = await this.$axios.post("/users", {
+            email: this.email,
+            password: this.password,
+            name: this.name,
+
       });
-      this.login();
+        }catch(error) {
+
+            console.log(error);
+            alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
+            return
+        }
+             this.login();
+
+
+        }
+    },
+    /*
+    ユーザー情報のバリデーション
+    */
+    validation(email,password,name) {
+        if(!this.mailCheck(email) || this.password.length< 8　||  this.name == ""){
+            alert('メールアドレスを間違えているか、パスワードが8文字以下です(゜ロ゜)')
+            return false;
+        }
+        return true;
     },
 
+    getRandomComment() {
+        let randomComment = Math.floor( Math.random() * this.randomComment.length );
+        return randomComment;
+    },
+
+
+    /*
+    入力情報を元にログイン処理、エラーが起きればアラートを表示。
+    */
     async login() {
       try {
         await this.$auth.loginWith("local", {
           data: {
             email: this.email,
             password: this.password,
-            name: this.name
+            name: this.name,
           }
         });
       } catch (error) {
-        console.log(error);
-      }
+                 alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
     }
+    },
+    /*
+    メールアドレスのバリデーション。
+    */
+    mailCheck( mail ) {
+    let mail_regex1 = new RegExp( '(?:[-!#-\'*+/-9=?A-Z^-~]+\.?(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*|"(?:[!#-\[\]-~]|\\\\[\x09 -~])*")@[-!#-\'*+/-9=?A-Z^-~]+(?:\.[-!#-\'*+/-9=?A-Z^-~]+)*' );
+    let mail_regex2 = new RegExp( '^[^\@]+\@[^\@]+$' );
+    if( mail.match( mail_regex1 ) && mail.match( mail_regex2 ) ) {
+        if( mail.match( /[^a-zA-Z0-9\!\"\#\$\%\&\'\(\)\=\~\|\-\^\\\@\[\;\:\]\,\.\/\\\<\>\?\_\`\{\+\*\} ]/ ) ) { return false; }
+        if( !mail.match( /\.[a-z]+$/ ) ) { return false; }
+        return true;
+    }
+        else
+    {
+        return false;
+    }
+}
   }
 };
 </script>
@@ -147,6 +206,7 @@ export default {
     position: relative;
     background-color: white;
     max-width: 467px;
+    min-width:467px;
     max-width: 50%;
     margin: 0 auto;
     padding: 44px 33px 30px 33px;

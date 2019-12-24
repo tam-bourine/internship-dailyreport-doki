@@ -16,8 +16,8 @@
           <font-awesome-icon style="margin-right:8px" icon="edit" />投稿する
         </nuxt-link>
         <div class="header__user" v-if="this.$auth.loggedIn">
-          <a class="header__toggleList" @click.prevent="clickedTest()">
-            <img src="../assets/img/penguin.svg" alt="user-icon" class="header__icon" />
+          <a class="header__toggleList" @click.prevent="open()" v-click-outside="close">
+            <img :src="getIcon()" alt="user-icon" class="header__icon" />
             <font-awesome-icon
               icon="caret-up"
               class="header__toggle-icon"
@@ -34,9 +34,9 @@
               </nuxt-link>
             </li>
             <li class="header__dropdown-item">
-              <a href>
+              <nuxt-link to="/account">
                 <font-awesome-icon class="header__dropdown-icon" icon="cog"></font-awesome-icon>設定
-              </a>
+              </nuxt-link>
             </li>
             <li class="header__dropdown-item">
               <a href　@click.prevent="logout()">
@@ -51,27 +51,75 @@
 </template>
 
 <script>
+import ClickOutside from "vue-click-outside";
 export default {
   data() {
     return {
       clicked: false,
-      nippoAmount: 0
+      nippoAmount: 0,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
-
+  directives: {
+    ClickOutside
+  },
   created: async function() {
     this.clicked = false;
   },
 
   methods: {
-    clickedTest() {
-      this.clicked = !this.clicked;
+    /*
+    トグルリストを表示。
+    */
+    open() {
+      this.clicked = true;
     },
 
+    /*
+    保存しているトークン、ユーザーデータを破棄。
+    */
     logout() {
       this.$auth.logout();
+    },
+    /*
+    トグルリストを非表示
+    */
+    close() {
+      this.clicked = false;
+    },
+
+    getIcon() {
+      console.log(this.$auth.user.id);
+      if (this.$auth.user.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.$auth.user.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.$auth.user.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.$auth.user.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   },
+
   beforeRouteLeave() {
     this.clicked = false;
   }
@@ -81,12 +129,25 @@ export default {
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap");
 
+$tab: 614px;
+$sm: 528px;
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
 .header {
   font-family: "Noto Sans JP", sans-serif;
   background-color: #5679e8;
   position: fixed;
   width: 100%;
-  z-index: 1;
+  z-index: 999;
   &__wrapper {
     max-width: 1100px;
     padding: 5px 0;
@@ -105,21 +166,40 @@ export default {
       opacity: 0.8;
       transform: 0.3s;
     }
+
+    @include tab {
+      font-size: 14px;
+      margin-left: 14px;
+    }
+
+    @include sm {
+      font-size: 12px;
+      margin-left: 10px;
+    }
   }
   &__box {
     display: flex;
     align-items: center;
     &:nth-child(2) {
       margin-right: 20px;
+      @include sm {
+        margin-right: 8px;
+      }
     }
   }
   &__title {
     max-width: 180px;
     vertical-align: sub;
+    @include tab {
+      max-width: 130px;
+    }
   }
 
   &__icon {
     max-width: 30px;
+    @include tab {
+      max-width: 20px;
+    }
   }
 
   &__btn {
@@ -141,6 +221,10 @@ export default {
     max-width: 30px;
     margin-right: -15px;
     transform: rotate(20deg);
+    @include tab {
+      max-width: 20px;
+      margin-right: -8px;
+    }
   }
 
   &__user {
@@ -199,8 +283,9 @@ export default {
 
     &:nth-child(1) {
       margin-top: 0;
-      padding: 12px;
+      padding: 12px 0;
       border-bottom: 1px solid #e5e5e5;
+
       &:hover {
         background-color: #fff;
         color: black;

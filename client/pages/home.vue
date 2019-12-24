@@ -40,6 +40,8 @@
           :author="nippo.user.name"
           :id="nippo.user_id"
           :articleId="nippo.id"
+          :likes="nippo.likes.length"
+          :likeList="nippo.likes"
         />
       </div>
 
@@ -52,7 +54,7 @@
 
         <div class="home__profile">
           <div class="home__profile-info">
-            <img class="home__logo" src="../assets/img/nippo__icon.svg" alt="profile-icon" />
+            <img class="home__logo" :src="getIcon()" alt="profile-icon" />
             <a class="home__name">
               {{this.$auth.user.name}}
               <br />
@@ -95,51 +97,102 @@ export default {
       user: true,
       articles: [],
       listActive: [true, false, false],
-      nippoAmount: []
+      nippoAmount: 0,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
 
+  /*
+　最新の記事を取得、ユーザーの記事数をセット
+  */
   created: async function() {
     this.updateList();
     const nippo = await this.$axios.get("/posts/" + this.$auth.user.id);
     this.nippoAmount = nippo.data.length;
-    console.log("this is how many nippo you wrote", this.nippoAmount);
-    //if not logged in send user to login form or singup
   },
 
   methods: {
+    /*
+    記事を新しい順に並び替え
+    */
     sortByLatest() {
       return this.articles.sort((a, b) => {
         return a.created_at < b.created_at ? 1 : -1;
       });
     },
 
+    /*
+    記事を更新順に並び替え
+    */
     sortByUpdated() {
       return this.articles.sort((a, b) => {
         return a.updated_at < b.updated_at ? 1 : -1;
       });
     },
-
+    /*
+    記事を古い順に並び替え
+    */
     sortByOldest() {
       return this.articles.sort((a, b) => {
         return a.created_at > b.created_at ? 1 : -1;
       });
     },
 
+    /*
+    並び替え機能の切り替え
+    */
     switchActiveList(listIndex) {
       this.listActive = [false, false, false];
       this.listActive[listIndex] = true;
     },
 
+    /*
+    データベースから最新の投稿データを取得
+     */
     async updateList() {
       let draftData = await this.$axios.get("/posts");
       this.articles = draftData.data;
-
       this.articles = this.sortByLatest();
+      console.log(this.articles);
     },
 
-    callParent() {
-      alert("working emit");
+    /*
+    指定したタグを持った記事を抽出
+    */
+    filterTag(tag) {
+      this.articles = this.articles.filter(value => {
+        return value == tag;
+      });
+    },
+    getIcon() {
+      console.log(this.$auth.user.id);
+      if (this.$auth.user.id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.$auth.user.id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.$auth.user.id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.$auth.user.id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   }
 };
@@ -150,6 +203,29 @@ html,
 body {
   background-color: #eee;
 }
+
+$tab: 993px;
+$sm: 740px;
+$xsm: 614px;
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin xsm {
+  @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
 .home {
   background-color: #eee;
   &__wrapper {
@@ -167,11 +243,34 @@ body {
 
   &__center {
     width: 580px;
+    @include tab {
+      width: 70%;
+    }
+
+    @include sm {
+      width: 68%;
+    }
+
+    @include xsm {
+      margin: 0 auto;
+      width: 90%;
+    }
   }
 
+  &__left {
+    @media screen {
+    }
+
+    @include xsm {
+      display: none;
+    }
+  }
   &__right {
     margin-left: 16px;
     width: 300px;
+    @include tab {
+      display: none;
+    }
   }
   &__card {
     margin-top: 16px;
@@ -194,6 +293,10 @@ body {
     flex-direction: column;
     text-align: left;
     width: 200px;
+
+    @include sm {
+      width: 150px;
+    }
   }
 
   &__sort-list {
@@ -203,6 +306,11 @@ body {
     font-size: 12px;
     cursor: pointer;
     margin-top: 8px;
+
+    @include sm {
+      font-size: 10px;
+      padding: 10px 30px 10px 20px;
+    }
 
     &:hover {
       transition: 0.3s;

@@ -2,12 +2,12 @@
   <section class="user">
     <div class="user__wrapper">
       <div class="user__left">
-        <img src="../../assets/img/nippo__icon.svg" alt class="user__img" />
-        <h2 class="user__name">{{this.articles.author}}manaki ikeda</h2>
+        <img :src="getIcon()" alt class="user__img" />
+        <h2 class="user__name">{{this.name}}</h2>
         <p class="user__description">たい焼きを食べるのが大好きな大学生です。</p>
       </div>
 
-      <div class="user__right">
+      <div class="user__right" v-if="!rom">
         <Nippo
           @update="updateList"
           class="user__card"
@@ -18,8 +18,14 @@
           :author="nippo.user.name"
           :id="nippo.user_id"
           :articleId="nippo.id"
+          :likes="nippo.likes.length"
+          :likeList="nippo.likes"
         />
       </div>
+      <div class="user__right" v-else>
+        <h2 class="user__message">(≧▽≦)つ[このユーザーはまだ日報を投稿していないよ！]</h2>
+      </div>
+
       <div class="user__center">
         <ul class="home__sort">
           <li
@@ -62,8 +68,13 @@ export default {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
     this.articles = userPost.data;
     this.articles = this.sortByLatest();
-    //ログインユーザのページが開かれている場合
-    this.admin = true;
+    if (this.articles.length == 0) {
+      this.rom = true;
+    } else {
+      this.name = this.articles[0].user.name;
+      //ログインユーザのページが開かれている場合
+      this.admin = true;
+    }
   },
   data() {
     return {
@@ -71,43 +82,110 @@ export default {
       articles: [],
       name: "manaki",
       listActive: [true, false, false],
-      admin: false
+      admin: false,
+      rom: false,
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
 
   methods: {
+    /*
+    記事を新しい順に並び替え
+    */
     sortByLatest() {
       return this.articles.sort((a, b) => {
         return a.date < b.date ? 1 : -1;
       });
     },
 
+    /*
+    記事を更新順に並び替え
+    */
     sortByUpdated() {
       return this.articles.sort((a, b) => {
         return a.updated_at < b.updated_at ? 1 : -1;
       });
     },
-
+    /*
+    記事を古い順に並び替え
+    */
     sortByOldest() {
       return this.articles.sort((a, b) => {
         return a.date > b.date ? 1 : -1;
       });
     },
 
+    /*
+    並び替え機能の切り替え
+    */
     switchActiveList(listIndex) {
       this.listActive = [false, false, false];
       this.listActive[listIndex] = true;
     },
+    /*
+    データベースから最新の投稿データを取得
+     */
     async updateList() {
       let draftData = await this.$axios.get("/posts/" + this.$auth.id);
       this.articles = draftData.data;
       this.articles = this.sortByLatest();
+    },
+    getIcon() {
+      if (this.root % 5 == 0) {
+        return this.icons[0].image;
+      } else if (this.root % 4 == 0) {
+        return this.icons[1].image;
+      } else if (this.root % 3 == 0) {
+        return this.icons[2].image;
+      } else if (this.root % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+$tab: 993px;
+$sm: 740px;
+$xsm: 614px;
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin xsm {
+  @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
 .user {
   background-color: #eee;
   &__wrapper {
@@ -115,20 +193,55 @@ export default {
     margin: 0 auto;
     display: flex;
     padding: 77px 0;
+
+    @include tab {
+      margin: 0;
+    }
   }
   &__left {
-    width: 30%;
+    width: 25%;
+    background-color: #fff;
+    height: 100%;
+    margin-right: 16px;
     text-align: center;
-    padding: 0 3% 3% 3%;
+    padding: 2%;
+    @include tab {
+      display: none;
+    }
   }
-
+  &__message {
+    font-size: 20px;
+    font-weight: 600;
+  }
   &__right {
+    max-width: 70%;
     width: 70%;
+    @include tab {
+      margin: 0;
+      margin-left: 50px;
+    }
+
+    @include xsm {
+      margin: 0 auto;
+      max-width: 90%;
+    }
+  }
+  &__center {
+    @include tab {
+      max-width: 70%;
+    }
+    @include xsm {
+      display: none;
+    }
   }
 
   &__img {
-    max-width: 250px;
+    max-width: 200px;
     border-radius: 16px;
+    @include xsm {
+      max-width: 72px;
+      margin-right: 8px;
+    }
   }
 
   &__description {
@@ -153,22 +266,6 @@ export default {
 }
 
 .home {
-  &__sort-list {
-    display: inline-block;
-    list-style: none;
-    padding: 10px 40px;
-    font-size: 12px;
-    margin-top: 8px;
-
-    &:hover {
-      transition: 0.3s;
-
-      background-color: #b8b8b8;
-    }
-    &:nth-child(1) {
-      margin-top: 0;
-    }
-  }
   &__sort {
     position: sticky;
     top: 66px;
@@ -177,6 +274,32 @@ export default {
     flex-direction: column;
     text-align: left;
     width: 200px;
+
+    @include sm {
+      width: 150px;
+    }
+  }
+
+  &__sort-list {
+    display: inline-block;
+    list-style: none;
+    padding: 10px 40px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 8px;
+
+    @include sm {
+      font-size: 10px;
+      padding: 10px 30px 10px 20px;
+    }
+
+    &:hover {
+      transition: 0.3s;
+      background-color: #b8b8b8;
+    }
+    &:nth-child(1) {
+      margin-top: 0;
+    }
   }
 
   &__list-icon {

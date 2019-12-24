@@ -53,8 +53,7 @@
             cols="30"
             v-model="script"
             rows="10"
-            placeholder="今日の日報をMarkdown記法で書いて共有しよう
-
+            placeholder="今日の日報をMarkdown記法で書いて共有しよう！
 <見出し>
 # 見出し 1
 ## 見出し 2
@@ -128,10 +127,10 @@ console.log(welcome);
       <div class="editor__footer-btns">
         <!--  v-if -->
 
-        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="saveDraft()">
+        <a class="editor__footer-btn" v-if="this.selected==0" @click.prevent="saveNippo()">
           <font-awesome-icon icon="save" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>下書き保存
         </a>
-        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="postDraft()">
+        <a class="editor__footer-btn" v-if="this.selected==2" @click.prevent="postNippo()">
           <font-awesome-icon icon="upload" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を投稿
         </a>
                 <a class="editor__footer-btn" v-if="this.selected==1" @click.prevent="updateNippo()">
@@ -157,6 +156,7 @@ console.log(welcome);
           </div>
         </a>
       </div>
+
     </div>
 
     <!-- Editor Wrapper -->
@@ -166,10 +166,11 @@ console.log(welcome);
 <script>
 import MarkdownItVue from "markdown-it-vue";
 import "markdown-it-vue/dist/markdown-it-vue.css";
+import VueStar from 'vue-star';
 
 export default {
   components: {
-    MarkdownItVue
+    MarkdownItVue,VueStar
   },
   data() {
     return {
@@ -179,62 +180,120 @@ export default {
       showMenu: false,
       leftScale: false,
       rightScale: false,
-      selected: 0,
+      selected: 2,
       user: this.$auth.user,
       edit:false
     };
   },
 
   methods: {
-    /* Test Post request */
-    async postDraft() {
-      let time = new Date().toLocaleString();
-      const res = await this.$axios.post("/posts", {
-        name: this.user.name,
-        body: this.script
+    /*
+    日報を投稿する。日報が空の場合は送信しない。
+    サーバーエラー発生時にアラートを表示。
+    */
+    async postNippo() {
+        if(this.script == ''　) {
+            alert('何か書いてください！(# ﾟДﾟ)')
+            return;
+        } else if(this.tag == '' ) {
+            alert("タグが入力されていませんよ！(ﾉﾟοﾟ)ﾉ ")
+            return;
+        }
+
+
+        try{
+        var userId = await this.$axios.post("/posts", {
+            name: this.user.name,
+            body: this.script,
+            tag:this.tag
       });
+        }catch(error) {
+            alert("サーバー側でエラーが発生している可能性があります(´・ω・`) しばらく待ってからもう一度試してみてください！");
+
+        }
+
+       await this.postTag(userId.data);
+       alert('お疲れ様でした(o・ω・o)ゝ日報が投稿されましたよ！');
+        this.$router.push('/home');
     },
 
+    /*
+    読み込んだ日報を更新後にユーザーページに移行。日報が空の場合は送信しない。
+    サーバーエラー発生時にアラートを表示。
+    */
     async updateNippo() {
-        const res = await this.$axios.put('/posts/'+this.$store.getters.getDraftId, {
-            id:this.$auth.user.id,
-            body:this.script
+          if(this.script == '') {
+            alert('何か書いてください！(# ﾟДﾟ)')
+            return;
+        }
+
+        try{
+            const res = await this.$axios.put('/posts/'+this.$store.getters.getDraftId, {
+                id:this.$auth.user.id,
+                body:this.script,
+                tag:this.tag
         });
+        }catch(error){
+            alert("サーバー側でエラーが発生している可能性があります(´・ω・`)¥n しばらく待ってからもう一度試してみてください！");
+            return;
+        }
+         alert('お疲れ様でした(o・ω・o)ゝ日報が更新されましたよ！');
 
         this.$store.commit('setDraft','');
         this.$store.commit('setDraftId',undefined);
-
         this.$router.push('/user/'+this.$auth.user.id);
-
     },
 
 
-    saveDraft()
+    /*
+    日報の下書きを保存する。
+    */
+    saveNippo()
     {
         this.$store.commit('setDraft',this.script);
-        alert('あなたの働きを保存しました∠(｀・ω・´).')
-    },
-    toggleMenu() {
-      this.showMenu = !this.showMenu;
+        alert('あなたの働きを保存しました∠(｀・ω・´)/')
     },
 
+
+    async postTag(nippoId) {
+        const res =  await this.$axios.post("/posts/"+nippoId+"/tags",{
+            name:this.tag
+        });
+        console.log("done post tag");
+},
+
+
+
+    /*
+    右メニューを拡大。
+    */
     scaleLeft() {
       this.leftScale = !this.leftScale;
     },
 
+    /*
+    左メニューを拡大。
+    */
     scaleRight() {
       this.rightScale = !this.rightScale;
     }
 
 
   },
+  /*
+  下書きを読み込み、ストア内編集idに値があれば編集モードONにする。
+  */
   created: function() {
     this.script = this.$store.getters.getDraft;
     if (this.$store.getters.getDraftId != undefined) {
         this.edit = true;
+        this.selected = 1;
         }
   },
 
+    /*
+    ページ移行前に下書きを保存しておく。
+    */
     beforeRouteLeave:function() {
         this.$store.commit('setDraft',this.script);
     }
@@ -243,13 +302,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$tab: 787px;
+$sm:727px;
+$xs:528px;
+
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sm {
+    @media (max-width:($sm)) {
+        @content;
+    }
+}
+
+@mixin xs {
+    @media (max-width:($xs)) {
+        @content;
+    }
+}
+
+
 input[type="text"],
 input[type="password"],
 textarea,
 select {
   outline: 0;
 }
-
 a:hover {
   cursor: pointer;
 }
@@ -264,7 +346,7 @@ a:hover {
   z-index: 0;
   overflow: hidden;
   &__wrapper {
-    padding: 10px;
+    padding: 12px;
     max-width: 100%;
     height: 88%;
   }
@@ -277,6 +359,7 @@ a:hover {
     &:nth-child(2) {
       margin-top: 10px;
     }
+
   }
 
   &__title {
@@ -285,6 +368,9 @@ a:hover {
 
   &__tag {
     font-size: 14px;
+    @include xs {
+        font-size:12px;
+    }
   }
 
   &__content {
@@ -320,6 +406,7 @@ a:hover {
   &__preview-render {
     padding: 16px;
     width: 100%;
+
     height: 100%;
     background-color: #fff;
     overflow: auto;
@@ -335,10 +422,18 @@ a:hover {
   &__bar-left {
     display: flex;
     background-color: #f7f7f7;
+    @include xs {
+        display: none;
+    }
   }
 
   &__bar-right {
+
     padding-left: 8px;
+    @include xs {
+        &:nth-child(2) {
+        }
+    }
   }
 
   &__bar-title {
@@ -346,6 +441,10 @@ a:hover {
     color: #999999;
     background-color: white;
     padding: 8px 24px;
+    @include sm {
+        font-size:10px;
+        padding:8px 12px;
+    }
   }
 
   &__bar-link {
@@ -366,6 +465,17 @@ a:hover {
     &:hover {
       color: black;
     }
+
+    @include tab {
+        margin-right: 6px;
+        font-size:16px;
+    }
+
+    @include sm {
+        font-size:16px;
+        margin-right: 2px;
+    }
+
   }
 
   &__footer {
@@ -476,6 +586,10 @@ a:hover {
     transform: rotate(-25deg);
     opacity: 0.7;
     background-size: contain;
+    @include sm {
+        width: 35px;
+        height: 35px;
+    }
   }
 
   &__helper-text {
@@ -485,6 +599,11 @@ a:hover {
     left: 50px;
     position: absolute;
     transform: rotate(25deg);
+    @include sm {
+        top:70px;
+        left:20px;
+        font-size:14px;
+    }
   }
 }
 
@@ -502,6 +621,9 @@ a:hover {
 
 .md-body {
   font-size: 14px;
+  @include sm {
+      font-size:10px;
+  }
 }
 
 .scale {

@@ -137,6 +137,15 @@ $ php artisan migrate --seed
             "created_at": "2019-12-15 14:30:18",
             "updated_at": "2019-12-15 14:30:18"
         }
+    "likes": [
+        {
+            "id": 2,
+            "user_id": 14,
+            "post_id": 2,
+            "created_at": "2019-12-23 15:30:42",
+            "updated_at": "2019-12-23 15:30:42"
+        }
+    ]
  },
  {
     ...
@@ -167,13 +176,17 @@ $ php artisan migrate --seed
 ```
 
 **POST** api/posts  
-新規投稿を作成  
+新規投稿を作成。作成後その投稿のidを返す。  
 #### Request
 ```javascript
 {
     "name" : {user_name},
     "body" : "text",
 }
+```
+#### Response
+```javascript
+{ "id": 2}
 ```
 **PUT/PATCH** api/posts/{post_id}  
 投稿を更新  
@@ -206,11 +219,12 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 
 ### いいね
 
-**POST** api/posts/{post_id}/users/{user_id}
+**POST** api/posts/{post_id}/likes/{user_id}
 いいねする
 
-**DELETE** api/posts/{post_id}/users/{user_id}
+**DELETE** api/posts/{post_id}/likes/{user_id}
 いいね取り消し
+
 
 ### ユーザーひとこと
 
@@ -221,3 +235,65 @@ emailとpasswordでログインして、トークンを生成し直し渡す
 ```javascript
 { "comment": "hitokoto" }
 ```
+### タグ  
+
+***GET*** api/tags  
+タグの一覧表示  
+#### Response  
+```javascript
+[
+    {
+        "id": 1,
+        "name": "php",
+        "created_at": "2019-12-23 14:26:59",
+        "updated_at": "2019-12-23 14:26:59",
+        "post": [
+            {
+                "id": 1,
+                "user_id": 19,
+                "body": "Duck. 'Found IT,' the Mouse heard this, it.",
+                "created_at": "1988-06-23 00:00:00",
+                "updated_at": "1984-05-29 00:00:00",
+                "likes_count": 0,
+                "pivot": {
+                    "tag_id": 1,
+                    "post_id": 1
+                }
+            },
+            {
+```
+
+***POST*** api/posts/{post_id}/tags  
+送信されたタグと投稿を結びつける。登録されていなければ新規作成。  
+#### Request
+```javascript
+{ "name": "tagsname" }
+```
+
+***GET*** api/tags/{tag_id}  
+指定されたタグのついた投稿を全て返す。  
+#### Response
+```javascript
+[
+    {
+        "id": 2,
+        "name": "laravel",
+        "created_at": "2019-12-23 14:28:03",
+        "updated_at": "2019-12-23 14:28:03",
+        "post": [
+            {
+                "id": 1,
+                "user_id": 19,
+                "body": "Duck. 'Found IT,' the Mouse heard this, it.",
+                "created_at": "1988-06-23 00:00:00",
+                "updated_at": "1984-05-29 00:00:00",
+                "likes_count": 0,
+                "pivot": {
+                    "tag_id": 2,
+                    "post_id": 1
+                }
+            },
+```
+
+***DELETE*** api/tags/{tag_id}
+タグの削除  
