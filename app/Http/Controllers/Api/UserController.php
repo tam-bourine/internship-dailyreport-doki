@@ -39,6 +39,7 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->api_token = Str::random(80);
         $user->save();
+
         return $user->api_token;
     }
 
