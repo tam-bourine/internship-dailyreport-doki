@@ -31,10 +31,14 @@
               <li class="nippo__tag">javascirpt</li>
             </ul>
           </div>
-
-          <vue-star class="nippo__like" animate="animated rubberBand" color="#F05654">
-            <a slot="icon" class="fa fa-heart" @click="handleClick"></a>
-          </vue-star>
+          <div class="nippo__like">
+            <div
+              class="heart"
+              @click="handleClick()"
+              :class="{unlikedHeart:!liked, likedHeart:liked, liked:liked} "
+            ></div>
+            <p class="nippo__likes">{{this.likes}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -50,11 +54,20 @@ export default {
     MarkdownItVue,
     VueStar
   },
-  props: ["author", "date", "script", "time", "title", "id", "articleId"],
+  props: [
+    "author",
+    "date",
+    "script",
+    "time",
+    "title",
+    "id",
+    "articleId",
+    "likes",
+    "likeList"
+  ],
   data() {
     return {
       admin: false,
-      likes: 0,
       icons: [
         {
           image: require("~/assets/img/giraffe.svg")
@@ -71,15 +84,33 @@ export default {
         {
           image: require("~/assets/img/penguin.svg")
         }
-      ]
+      ],
+      liked: false,
+      requesting: false
     };
   },
   methods: {
     /*
     いいねボタン処理
      */
-    handleClick() {
-      alert("you liked ~ tweet");
+    async handleClick() {
+      if (!this.isRequesting) return;
+      this.requesting = true;
+
+      if (!this.liked) {
+        this.liked = true;
+        const res = await this.$axios.post(
+          "/posts/" + this.articleId + "/likes/" + this.$auth.user.id
+        );
+      } else {
+        this.liked = false;
+        const res = await this.$axios.delete(
+          "/posts/" + this.articleId + "/likes/" + this.$auth.user.id
+        );
+      }
+
+      this.$emit("update");
+      this.requesting = false;
     },
 
     /*
@@ -94,8 +125,12 @@ export default {
     指定したidの記事を削除した後、画面を更新する
      */
     async deletePost() {
+      if (!this.isRequesting) return;
+
+      this.requesting = true;
       const res = await this.$axios.delete("/posts/" + this.articleId);
       this.$emit("update");
+      this.requesting = false;
     },
 
     /*
@@ -113,6 +148,19 @@ export default {
       } else {
         return this.icons[4].image;
       }
+    },
+
+    /*
+    Apiリクエスト中であれば新しいリクエストを無視する
+    連打防止用
+     */
+    isRequesting() {
+      if (this.requesting) {
+        alert("すでにリクエストを送っています！しばらくお待ちください(´·ω·`)");
+        return true;
+      } else {
+        return false;
+      }
     }
   },
 
@@ -122,6 +170,13 @@ export default {
   created: function() {
     if (this.$auth.user.id == this.id) this.admin = true;
     /* const res = await this.$axios.get() */
+    if (this.likeList.length != 0 || this.likeList != undefined) {
+      for (let i = 0; i < this.likeList.length; i++) {
+        if (this.$auth.user.id == this.likeList[i].user_id) {
+          this.liked = true;
+        }
+      }
+    }
   }
 };
 </script>
@@ -149,7 +204,6 @@ $xsm: 528px;
 }
 
 .nippo {
-  max-width: 560px;
   padding: 10px;
   border: 1px solid #fafafa;
   background-color: white;
@@ -284,9 +338,43 @@ $xsm: 528px;
     align-items: center;
   }
 
+  &__likes {
+    margin-left: 4px;
+    color: #758795;
+    display: inline-block;
+  }
+
+  &__heart {
+    position: relative;
+    &:after {
+      position: absolute;
+      margin-left: 2px;
+      content: "いいね";
+      width: 120px;
+      height: 20px;
+      color: #758795;
+    }
+  }
   &__like {
-    right: 20px;
-    bottom: -45px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    top: 10px;
+    right: 45px;
+  }
+
+  &__likes {
+    position: absolute;
+    right: -115px;
+    top: 16px;
+    display: flex;
+    margin-left: 2px;
+    &:after {
+      content: "いいね";
+      display: inline-block;
+      width: 120px;
+      height: auto;
+    }
   }
 }
 
@@ -299,5 +387,54 @@ $xsm: 528px;
 
 .md-body {
   font-size: 14px;
+}
+
+.liked {
+  background-position: right !important;
+}
+
+.notLiked {
+  color: #8e9aa5;
+}
+
+.heart {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  background-image: url("https://abs.twimg.com/a/1446542199/img/t1/web_heart_animation.png");
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: 2900%;
+}
+
+.heart:hover {
+  background-position: right;
+}
+
+.is_animating {
+  animation: heart-burst 0.8s steps(28) 1;
+}
+
+.likedHeart {
+  animation: heart-burst 0.8s steps(28) 1;
+}
+
+.unlikedHeart {
+}
+
+@keyframes heart-burst {
+  from {
+    background-position: left;
+  }
+  to {
+    background-position: right;
+  }
+}
+</style>
+
+
+<style lang="css">
+.VueStar__decoration {
+  background: none;
 }
 </style>

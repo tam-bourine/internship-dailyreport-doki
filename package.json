@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "node -r dotenv/config ./node_modules/@nuxt/cli/bin/nuxt-cli.js --port 3313",
+        "dev": "node -r dotenv/config ./node_modules/@nuxt/cli/bin/nuxt-cli.js --port 3323",
         "build": "nuxt build",
         "start": "nuxt start"
     },

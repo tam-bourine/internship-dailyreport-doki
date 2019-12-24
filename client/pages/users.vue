@@ -14,13 +14,13 @@
         <ul>
           <li class="users__list" v-for="user in userList" :key="user.description">
             <div class="users__user">
-              <img class="users__img" src="../assets/img/koala.svg" alt />
+              <img class="users__img" :src="getIcon(user.id)" alt="users-icon" />
               <div class="users__info">
                 <nuxt-link
                   :to="{name: 'user-user', params: {user:user.id}}"
                   class="users__name"
                 >{{user.name}}</nuxt-link>
-                <p class="users__word">{{user.description}}</p>
+                <p class="users__word">{{user.comment}}</p>
               </div>
             </div>
           </li>
@@ -35,7 +35,24 @@ export default {
   data() {
     return {
       userList: [],
-      user: ""
+      user: "",
+      icons: [
+        {
+          image: require("~/assets/img/giraffe.svg")
+        },
+        {
+          image: require("~/assets/img/bird.svg")
+        },
+        {
+          image: require("~/assets/img/hippo.svg")
+        },
+        {
+          image: require("~/assets/img/whale.svg")
+        },
+        {
+          image: require("~/assets/img/penguin.svg")
+        }
+      ]
     };
   },
   /*
@@ -44,6 +61,23 @@ export default {
   created: async function() {
     let userData = await this.$axios.get("/users");
     this.userList = userData.data;
+  },
+
+  methods: {
+    getIcon(id) {
+      console.log(this.$auth.user.id);
+      if (id % 5 == 0) {
+        return this.icons[0].image;
+      } else if (id % 4 == 0) {
+        return this.icons[1].image;
+      } else if (id % 3 == 0) {
+        return this.icons[2].image;
+      } else if (id % 2 == 0) {
+        return this.icons[3].image;
+      } else {
+        return this.icons[4].image;
+      }
+    }
   }
 };
 </script>

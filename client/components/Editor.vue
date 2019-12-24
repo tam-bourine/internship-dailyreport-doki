@@ -192,27 +192,30 @@ export default {
     サーバーエラー発生時にアラートを表示。
     */
     async postNippo() {
-        if(this.script == '') {
+        if(this.script == ''　) {
             alert('何か書いてください！(# ﾟДﾟ)')
             return;
+        } else if(this.tag == '' ) {
+            alert("タグが入力されていませんよ！(ﾉﾟοﾟ)ﾉ ")
+            return;
         }
-        try{
 
-        const res = await this.$axios.post("/posts", {
+
+        try{
+        var userId = await this.$axios.post("/posts", {
             name: this.user.name,
             body: this.script,
             tag:this.tag
       });
         }catch(error) {
-            alert("サーバー側でエラーが発生している可能性があります(´・ω・`)¥n しばらく待ってからもう一度試してみてください！");
+            alert("サーバー側でエラーが発生している可能性があります(´・ω・`) しばらく待ってからもう一度試してみてください！");
 
         }
-            alert('お疲れ様でした(o・ω・o)ゝ日報が投稿されましたよ！');
-            this.$router.push('/home');
+
+       await this.postTag(userId.data);
+       alert('お疲れ様でした(o・ω・o)ゝ日報が投稿されましたよ！');
+        this.$router.push('/home');
     },
-
-
-
 
     /*
     読み込んだ日報を更新後にユーザーページに移行。日報が空の場合は送信しない。
@@ -250,6 +253,16 @@ export default {
         this.$store.commit('setDraft',this.script);
         alert('あなたの働きを保存しました∠(｀・ω・´)/')
     },
+
+
+    async postTag(nippoId) {
+        const res =  await this.$axios.post("/posts/"+nippoId+"/tags",{
+            name:this.tag
+        });
+        console.log("done post tag");
+},
+
+
 
     /*
     右メニューを拡大。
