@@ -7,7 +7,7 @@
         <p class="user__description">たい焼きを食べるのが大好きな大学生です。</p>
       </div>
 
-      <div class="user__right">
+      <div class="user__right" v-if="!rom">
         <Nippo
           @update="updateList"
           class="user__card"
@@ -18,8 +18,14 @@
           :author="nippo.user.name"
           :id="nippo.user_id"
           :articleId="nippo.id"
+          :likes="nippo.likes.length"
+          :likeList="nippo.likes"
         />
       </div>
+      <div class="user__right" v-else>
+        <h2 class="user__message">(≧▽≦)つ[このユーザーはまだ日報を投稿していないよ！]</h2>
+      </div>
+
       <div class="user__center">
         <ul class="home__sort">
           <li
@@ -62,9 +68,13 @@ export default {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
     this.articles = userPost.data;
     this.articles = this.sortByLatest();
-    this.name = this.articles[0].user.name;
-    //ログインユーザのページが開かれている場合
-    this.admin = true;
+    if (this.articles.length == 0) {
+      this.rom = true;
+    } else {
+      this.name = this.articles[0].user.name;
+      //ログインユーザのページが開かれている場合
+      this.admin = true;
+    }
   },
   data() {
     return {
@@ -73,6 +83,7 @@ export default {
       name: "manaki",
       listActive: [true, false, false],
       admin: false,
+      rom: false,
       icons: [
         {
           image: require("~/assets/img/giraffe.svg")
@@ -136,13 +147,13 @@ export default {
       this.articles = this.sortByLatest();
     },
     getIcon() {
-      if (this.$auth.user.id % 5 == 0) {
+      if (this.root % 5 == 0) {
         return this.icons[0].image;
-      } else if (this.$auth.user.id % 4 == 0) {
+      } else if (this.root % 4 == 0) {
         return this.icons[1].image;
-      } else if (this.$auth.user.id % 3 == 0) {
+      } else if (this.root % 3 == 0) {
         return this.icons[2].image;
-      } else if (this.$auth.user.id % 2 == 0) {
+      } else if (this.root % 2 == 0) {
         return this.icons[3].image;
       } else {
         return this.icons[4].image;
@@ -193,14 +204,18 @@ $xsm: 614px;
     height: 100%;
     margin-right: 16px;
     text-align: center;
-    padding: 0 3% 3% 3%;
+    padding: 2%;
     @include tab {
       display: none;
     }
   }
-
+  &__message {
+    font-size: 20px;
+    font-weight: 600;
+  }
   &__right {
     max-width: 70%;
+    width: 70%;
     @include tab {
       margin: 0;
       margin-left: 50px;
@@ -221,7 +236,7 @@ $xsm: 614px;
   }
 
   &__img {
-    max-width: 250px;
+    max-width: 200px;
     border-radius: 16px;
     @include xsm {
       max-width: 72px;

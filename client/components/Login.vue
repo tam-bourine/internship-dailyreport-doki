@@ -62,7 +62,15 @@ export default {
       email: "",
       password: "",
       name: "",
-      checked: false
+      checked: false,
+      randomComment: [
+          "最近はおでんにはまっていて、大根がおでん界の王様だと考えている。",
+          "空を眺めているのが大好きで日中は地元の川の河川敷で見つかることが多い。",
+          "人間に見えるかもしれないがこう見えてれっきとしたフンボルトペンギンである。",
+          "無類のお肉好きであり週末には必ずと言って良いほど焼肉屋に通っている。",
+          "苦手な食べ物はないけど、好きなものもない今日この頃",
+      ]
+
     };
   },
   methods: {
@@ -76,9 +84,10 @@ export default {
         try {
 
             const token = await this.$axios.post("/users", {
-                email: this.email,
+            email: this.email,
             password: this.password,
-            name: this.name
+            name: this.name,
+
       });
         }catch(error) {
 
@@ -87,6 +96,8 @@ export default {
             return
         }
              this.login();
+
+
         }
     },
     /*
@@ -100,6 +111,12 @@ export default {
         return true;
     },
 
+    getRandomComment() {
+        let randomComment = Math.floor( Math.random() * this.randomComment.length );
+        return randomComment;
+    },
+
+
     /*
     入力情報を元にログイン処理、エラーが起きればアラートを表示。
     */
@@ -109,15 +126,13 @@ export default {
           data: {
             email: this.email,
             password: this.password,
-            name: this.name
+            name: this.name,
           }
         });
       } catch (error) {
                  alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
-}
+    }
     },
-
-
     /*
     メールアドレスのバリデーション。
     */
@@ -191,6 +206,7 @@ export default {
     position: relative;
     background-color: white;
     max-width: 467px;
+    min-width:467px;
     max-width: 50%;
     margin: 0 auto;
     padding: 44px 33px 30px 33px;

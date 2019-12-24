@@ -40,6 +40,8 @@
           :author="nippo.user.name"
           :id="nippo.user_id"
           :articleId="nippo.id"
+          :likes="nippo.likes.length"
+          :likeList="nippo.likes"
         />
       </div>
 
@@ -167,6 +169,7 @@ export default {
       let draftData = await this.$axios.get("/posts");
       this.articles = draftData.data;
       this.articles = this.sortByLatest();
+      console.log(this.articles);
     },
 
     /*
