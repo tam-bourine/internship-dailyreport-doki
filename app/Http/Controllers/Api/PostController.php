@@ -51,7 +51,7 @@ class PostController extends Controller
         $url = "https://slack.com/api/chat.postMessage";
         $post_fields = [
             "channel" => "#testapi",
-            "text" => $user->name . "さんが日報を投稿しました。確認しにいきましょう！\nhttps://dreport-201912.herokuapp.com/users/".$user->id,
+            "text" => $user->name . "さんが日報を投稿しました。確認しにいきましょう！\nhttps://dreport-201912.herokuapp.com/user/".$user->id,
             "as_user" => false
         ];
         $options = [
