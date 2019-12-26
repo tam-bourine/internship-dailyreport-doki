@@ -11,7 +11,7 @@
               :to="{name: 'user-user', params: {user:this.id} }"
               class="nippo__user-link"
             >{{this.author}}</nuxt-link>
-            <time style="color:#b8b8b8">{{this.time}}</time>
+            <time style="color:#b8b8b8" class="nippo__time">{{this.time}}</time>
           </div>
           <div class="nippo__change" v-if="admin">
             <a href class="nippo__btn btn--edit" @click.prevent="editPost()">
@@ -185,6 +185,9 @@ export default {
 $tab: 993px;
 $sm: 614px;
 $xsm: 528px;
+$phone: 376px;
+$mobile: 376px;
+
 @mixin tab {
   @media (max-width: ($tab)) {
     @content;
@@ -203,6 +206,12 @@ $xsm: 528px;
   }
 }
 
+@mixin phone {
+  @media (max-width: ($phone)) {
+    @content;
+  }
+}
+
 .nippo {
   padding: 10px;
   border: 1px solid #fafafa;
@@ -211,6 +220,11 @@ $xsm: 528px;
   text-align: left;
   @include tab {
     max-width: 100%;
+    margin-right: 8px;
+  }
+
+  @include xsm {
+    margin-right: 0;
   }
   // box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   &__wrapper {
@@ -222,6 +236,9 @@ $xsm: 528px;
     text-align: center;
     &-icon {
       max-width: 44px;
+    }
+    @include phone {
+      width: 8%;
     }
   }
   &__content {
@@ -246,6 +263,12 @@ $xsm: 528px;
         font-size: 14px;
         margin-left: 8px;
       }
+
+      @include phone {
+        font-size: 13px;
+        margin-left: 0;
+        margin-top: 8px;
+      }
     }
   }
 
@@ -261,6 +284,10 @@ $xsm: 528px;
       transition: 0.3s;
       color: #337ab7;
       cursor: pointer;
+    }
+
+    @include phone {
+      font-size: 14px;
     }
   }
 
@@ -289,6 +316,13 @@ $xsm: 528px;
   &__info {
     display: flex;
     justify-content: space-between;
+  }
+
+  &__infos {
+    @include phone {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   &__btn {
@@ -361,6 +395,10 @@ $xsm: 528px;
     position: relative;
     top: 10px;
     right: 45px;
+    @include phone {
+      font-size: 14px;
+      right: 40px;
+    }
   }
 
   &__likes {
@@ -375,6 +413,12 @@ $xsm: 528px;
       width: 120px;
       height: auto;
     }
+
+    @include phone {
+      font-size: 14px;
+      left: 38px;
+      margin-left: -3px;
+    }
   }
 }
 
@@ -387,6 +431,13 @@ $xsm: 528px;
 
 .md-body {
   font-size: 14px;
+  @include phone {
+    font-size: 11px;
+  }
+
+  @include tab {
+    font-size: 14px;
+  }
 }
 
 .liked {

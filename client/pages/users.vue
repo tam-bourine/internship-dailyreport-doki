@@ -86,6 +86,7 @@ export default {
 <style lang="scss" scoped>
 $tab: 1077px;
 $sm: 524px;
+$phone: 327px;
 @mixin tab {
   @media (max-width: ($tab)) {
     @content;
@@ -93,6 +94,12 @@ $sm: 524px;
 }
 @mixin sm {
   @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media (min-width: ($phone)) {
     @content;
   }
 }
@@ -126,6 +133,9 @@ $sm: 524px;
       width: 70%;
       margin: 0 auto;
     }
+    @include phone {
+      width: 90%;
+    }
   }
 
   &__right {
@@ -133,6 +143,9 @@ $sm: 524px;
     margin: 0 auto;
     @include tab {
       margin-top: 16px;
+    }
+    @include phone {
+      width: 90%;
     }
   }
   &__title {
