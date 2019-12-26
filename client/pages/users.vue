@@ -185,4 +185,12 @@ $sm: 524px;
     }
   }
 }
+.active {
+  background-color: #5679e8;
+  color: #fff;
+  pointer-events: none;
+  &:hover {
+    background-color: #33488b;
+  }
+}
 </style>

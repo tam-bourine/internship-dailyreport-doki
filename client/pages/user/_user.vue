@@ -5,7 +5,6 @@
         <img :src="getIcon()" alt class="user__img" />
         <h2 class="user__name">{{this.name}}</h2>
         <p class="user__description" v-if="this.comment">{{this.comment}}</p>
-        <p v-else class="user__description">設定からひとことを追加しよう！</p>
       </div>
 
       <div class="user__right" v-if="!rom">
@@ -21,6 +20,7 @@
           :articleId="nippo.id"
           :likes="nippo.likes.length"
           :likeList="nippo.likes"
+          :tags="nippo.tags"
         />
       </div>
       <div class="user__right" v-else>
@@ -53,6 +53,17 @@
             <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>古い物順
           </li>
         </ul>
+
+        <ul class="home__tags">
+          <li class="home__tag" v-for="tag in tagList" :key="tag.id">
+            <Tag
+              :name="tag.name"
+              :tagSelected="tagSelected"
+              @update="addTagSelected,removeTagSelected"
+              class="home__tag-link"
+            ></Tag>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -60,23 +71,30 @@
 
 <script>
 import Nippo from "~/components/Nippo.vue";
+import Tag from "~/components/Tag.vue";
 export default {
   components: {
-    Nippo
+    Nippo,
+    Tag
   },
 
   created: async function() {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
-    console.log(userPost);
+    const tags = await this.$axios.get("/tags");
+    console.log(tags.data);
+    this.tagList = tags.data;
     this.articles = userPost.data;
-    this.articles = this.sortByLatest();
+    this.articlesBackUp = userPost.data;
+    //this.articles = this.sortByLatest();
+
     if (this.articles.length == 0) {
       this.rom = true;
+      let userInfo = await this.$axios.get("users/" + this.$route.params.user);
+      this.name = userInfo.data.name;
+      this.comment = userInfo.data.comment;
     } else {
       this.name = this.articles[0].user.name;
-
       this.comment = this.articles[0].user.comment;
-      //ログインユーザのページが開かれている場合
       this.admin = true;
     }
   },
@@ -104,7 +122,11 @@ export default {
         {
           image: require("~/assets/img/penguin.svg")
         }
-      ]
+      ],
+      comment: "設定からひとことを追加しよう！",
+      articlesBackUp: [],
+      tagSelected: [],
+      tagList: []
     };
   },
 
@@ -146,7 +168,8 @@ export default {
     データベースから最新の投稿データを取得
      */
     async updateList() {
-      let draftData = await this.$axios.get("/posts/" + this.$auth.id);
+      alert("running this function");
+      let draftData = await this.$axios.get("/posts/" + this.$auth.user.id);
       this.articles = draftData.data;
       this.articles = this.sortByLatest();
     },
@@ -162,6 +185,32 @@ export default {
       } else {
         return this.icons[4].image;
       }
+    }
+  },
+  watch: {
+    tagSelected: function() {
+      let tempList = [];
+      if (this.tagSelected.length == 0) {
+        this.articles = this.articlesBackUp;
+        console.log(this.articles);
+        return;
+      }
+
+      for (let tagIndex in this.tagSelected) {
+        for (let articleIndex in this.articlesBackUp) {
+          for (let tagIndex2 in this.articlesBackUp[articleIndex].tags) {
+            if (
+              this.articlesBackUp[articleIndex].tags[tagIndex2].name ==
+              this.tagSelected[tagIndex]
+            ) {
+              if (!tempList.includes(this.articlesBackUp[articleIndex])) {
+                tempList.push(this.articlesBackUp[articleIndex]);
+              }
+            }
+          }
+        }
+      }
+      this.articles = tempList;
     }
   }
 };
@@ -218,7 +267,6 @@ $xsm: 614px;
     font-weight: 600;
   }
   &__right {
-    max-width: 70%;
     width: 70%;
     @include tab {
       margin: 0;
@@ -227,7 +275,7 @@ $xsm: 614px;
 
     @include xsm {
       margin: 0 auto;
-      max-width: 90%;
+      width: 90%;
     }
   }
   &__center {
@@ -309,11 +357,58 @@ $xsm: 614px;
   &__list-icon {
     margin-right: 8px;
   }
+
+  &__tag {
+    margin-top: 14px;
+    font-size: 12px;
+    display: inline-block;
+    margin-left: 8px;
+    cursor: pointer;
+  }
+  &__tags {
+    position: sticky;
+    top: 180px;
+    margin-top: 8px;
+    margin-right: 14px;
+    padding: 20px;
+    display: gird;
+    grid-gap: 8px;
+    max-width: 200px;
+  }
+  &__tag-link {
+    position: relative;
+    padding: 5px 10px;
+    margin-top: 8px;
+    display: inline-block;
+    z-index: 1;
+    border-radius: 5px 0 0 5px;
+    margin-left: 8px;
+    background-color: #fff;
+    transition: 0.3s;
+
+    &:hover {
+      opacity: 0.8;
+      transition: 0.3s;
+    }
+    &:before {
+      z-index: -4;
+      position: absolute;
+      content: "";
+      width: 15px;
+      height: 14px;
+      top: 4px;
+      left: -6px;
+      transform: rotate(45deg);
+      background-color: #fff;
+      transition: 0.3s;
+    }
+  }
 }
 
 .active {
   background-color: #5679e8;
   color: #fff;
+  pointer-events: none;
   &:hover {
     background-color: #33488b;
   }

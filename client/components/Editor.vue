@@ -276,10 +276,14 @@ export default {
 
 
     async postTag(nippoId) {
+        let tagList = this.tag.split(' ');
+        tagList = tagList.slice(0,3);
+        console.log(tagList);
         const res =  await this.$axios.post("/posts/"+nippoId+"/tags",{
-            name:this.tag
+            tags:tagList
         });
-},
+
+    },
     /*
     右メニューを拡大。
     */

@@ -112,7 +112,7 @@ export default {
     連打防止用
      */
     isRequesting() {
-      if (this.requesting()) {
+      if (this.requesting) {
         alert("すでにリクエストを送っています！しばらくお待ちください(´·ω·`)");
         return true;
       } else {
