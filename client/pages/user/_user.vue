@@ -81,7 +81,6 @@ export default {
   created: async function() {
     let userPost = await this.$axios.get("/posts/" + this.$route.params.user);
     const tags = await this.$axios.get("/tags");
-    console.log(tags.data);
     this.tagList = tags.data;
     this.articles = userPost.data;
     this.articlesBackUp = userPost.data;
@@ -191,10 +190,8 @@ export default {
       let tempList = [];
       if (this.tagSelected.length == 0) {
         this.articles = this.articlesBackUp;
-        console.log(this.articles);
         return;
       }
-
       for (let tagIndex in this.tagSelected) {
         for (let articleIndex in this.articlesBackUp) {
           for (let tagIndex2 in this.articlesBackUp[articleIndex].tags) {

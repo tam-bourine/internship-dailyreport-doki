@@ -90,8 +90,7 @@ export default {
             return
         }
         this.requesting=false;
-             this.login();
-
+        this.login();
 
         }
     },
@@ -123,7 +122,7 @@ export default {
     入力情報を元にログイン処理、エラーが起きればアラートを表示。
     */
     async login() {
-        if(this,isRequesting())
+        if(!this.isRequesting())
       try {
         await this.$auth.loginWith("local", {
           data: {

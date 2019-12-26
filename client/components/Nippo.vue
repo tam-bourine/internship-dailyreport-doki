@@ -118,7 +118,7 @@ export default {
     editPost() {
       this.$store.commit("setDraft", this.script);
       this.$store.commit("setDraftId", this.articleId);
-      this.$router.push("editor");
+      this.$router.push("/editor");
     },
     /*
     指定したidの記事を削除した後、画面を更新する
