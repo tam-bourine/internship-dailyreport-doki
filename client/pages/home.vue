@@ -280,7 +280,7 @@ body {
 $tab: 993px;
 $sm: 740px;
 $xsm: 614px;
-$phone: 376px;
+$phone: 411px;
 
 @mixin tab {
   @media (max-width: ($tab)) {

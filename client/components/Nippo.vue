@@ -185,7 +185,7 @@ export default {
 $tab: 993px;
 $sm: 614px;
 $xsm: 528px;
-$phone: 376px;
+$phone: 411px;
 $mobile: 376px;
 
 @mixin tab {
@@ -431,12 +431,12 @@ $mobile: 376px;
 
 .md-body {
   font-size: 14px;
-  @include phone {
-    font-size: 11px;
-  }
 
   @include tab {
     font-size: 14px;
+  }
+  @include phone {
+    font-size: 11px;
   }
 }
 

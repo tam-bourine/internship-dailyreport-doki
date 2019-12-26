@@ -140,7 +140,7 @@ export default {
 
 $tab: 614px;
 $sm: 528px;
-$phone: 376px;
+$phone: 411px;
 @mixin tab {
   @media (max-width: ($tab)) {
     @content;
