@@ -24,9 +24,6 @@
             </div>
 
             <div class="editor__bar-right">
-              <a>
-                <font-awesome-icon class="editor__bar-icon" icon="image" />
-              </a>
 
               <a href="https://gist.github.com/rxaviers/7360908" target="_blank">
                 <font-awesome-icon class="editor__bar-icon" icon="smile-beam" />
@@ -325,7 +322,7 @@ export default {
 $tab: 787px;
 $sm:727px;
 $xs:528px;
-
+$phone:411px;
 
 @mixin tab {
   @media (max-width: ($tab)) {
@@ -344,7 +341,11 @@ $xs:528px;
         @content;
     }
 }
-
+@mixin phone {
+    @media(max-width:($phone)){
+        @content;
+    }
+}
 
 input[type="text"],
 input[type="password"],
@@ -410,7 +411,9 @@ a:hover {
     padding: 16px;
     font-size: 14px;
     font-family: "Noto Sans JP", sans-serif;
-    //border-top: 8px solid #97caef;
+    @include xs {
+        font-size:12px;
+    }
   }
 
   &__script {
@@ -451,8 +454,6 @@ a:hover {
 
     padding-left: 8px;
     @include xs {
-        &:nth-child(2) {
-        }
     }
   }
 
@@ -642,7 +643,7 @@ a:hover {
 .md-body {
   font-size: 14px;
   @include sm {
-      font-size:10px;
+      font-size:13px;
   }
 }
 
