@@ -27,8 +27,18 @@
             <font-awesome-icon icon="binoculars" class="home__list-icon"></font-awesome-icon>古い物順
           </li>
         </ul>
-      </div>
 
+        <ul class="home__tags">
+          <li class="home__tag" v-for="tag in tagList" :key="tag.id">
+            <Tag
+              :name="tag.name"
+              :tagSelected="tagSelected"
+              @update="addTagSelected,removeTagSelected"
+              class="home__tag-link"
+            ></Tag>
+          </li>
+        </ul>
+      </div>
       <div class="home__center">
         <Nippo
           @update="updateList"
@@ -42,6 +52,7 @@
           :articleId="nippo.id"
           :likes="nippo.likes.length"
           :likeList="nippo.likes"
+          :tags="nippo.tags"
         />
       </div>
 
@@ -87,15 +98,19 @@
 
 <script>
 import Nippo from "@/components/Nippo.vue";
+import Tag from "@/components/Tag.vue";
 export default {
   components: {
-    Nippo
+    Nippo,
+    Tag
   },
 
   data() {
     return {
       user: true,
       articles: [],
+      articlesBackUp: [],
+      tagList: [],
       listActive: [true, false, false],
       nippoAmount: 0,
       icons: [
@@ -115,7 +130,8 @@ export default {
           image: require("~/assets/img/penguin.svg")
         }
       ],
-      requesting: false
+      requesting: false,
+      tagSelected: []
     };
   },
 
@@ -125,6 +141,8 @@ export default {
   created: async function() {
     this.updateList();
     const nippo = await this.$axios.get("/posts/" + this.$auth.user.id);
+    const tags = await this.$axios.get("/tags");
+    this.tagList = tags.data;
     this.nippoAmount = nippo.data.length;
   },
 
@@ -167,10 +185,24 @@ export default {
     データベースから最新の投稿データを取得
      */
     async updateList() {
-      let draftData = await this.$axios.get("/posts");
-      this.articles = draftData.data;
+      let nippoData = await this.$axios.get("/posts");
+      this.articles = nippoData.data;
+      this.articlesBackUp = nippoData.data;
       this.articles = this.sortByLatest();
-      console.log(this.articles);
+    },
+
+    /*
+    指定した要素をタグ選択リストに追加
+    */
+    addTagSelected(tag) {
+      this.tagSelected.push(tag);
+    },
+
+    /*
+    指定されたタグをタグ選択リストから取り除く
+     */
+    removeTagSelected(tag) {
+      this.tagSelected = this.tagSelected.filter(n => n == tag);
     },
 
     /*
@@ -207,6 +239,33 @@ export default {
       } else {
         return false;
       }
+    }
+  },
+
+  watch: {
+    tagSelected: function() {
+      let tempList = [];
+      if (this.tagSelected.length == 0) {
+        this.articles = this.articlesBackUp;
+        console.log(this.articles);
+        return;
+      }
+
+      for (let tagIndex in this.tagSelected) {
+        for (let articleIndex in this.articlesBackUp) {
+          for (let tagIndex2 in this.articlesBackUp[articleIndex].tags) {
+            if (
+              this.articlesBackUp[articleIndex].tags[tagIndex2].name ==
+              this.tagSelected[tagIndex]
+            ) {
+              if (!tempList.includes(this.articlesBackUp[articleIndex])) {
+                tempList.push(this.articlesBackUp[articleIndex]);
+              }
+            }
+          }
+        }
+      }
+      this.articles = tempList;
     }
   }
 };
@@ -272,9 +331,6 @@ $xsm: 614px;
   }
 
   &__left {
-    @media screen {
-    }
-
     @include xsm {
       display: none;
     }
@@ -311,6 +367,12 @@ $xsm: 614px;
     @include sm {
       width: 150px;
     }
+  }
+
+  &__tags {
+    position: sticky;
+    top: 180px;
+    margin-top: 8px;
   }
 
   &__sort-list {
@@ -403,6 +465,50 @@ $xsm: 614px;
     &:hover {
       opacity: 0.7;
       transition: 0.4s;
+    }
+  }
+  &__tags {
+    margin-right: 14px;
+    padding: 20px;
+    display: gird;
+    grid-gap: 8px;
+    max-width: 200px;
+  }
+
+  &__tag {
+    margin-top: 14px;
+    font-size: 12px;
+    display: inline-block;
+    margin-left: 8px;
+    cursor: pointer;
+  }
+
+  &__tag-link {
+    position: relative;
+    padding: 5px 10px;
+    margin-top: 8px;
+    display: inline-block;
+    z-index: 1;
+    border-radius: 5px 0 0 5px;
+    margin-left: 8px;
+    background-color: #fff;
+    transition: 0.3s;
+
+    &:hover {
+      opacity: 0.8;
+      transition: 0.3s;
+    }
+    &:before {
+      z-index: -4;
+      position: absolute;
+      content: "";
+      width: 15px;
+      height: 14px;
+      top: 4px;
+      left: -6px;
+      transform: rotate(45deg);
+      background-color: #fff;
+      transition: 0.3s;
     }
   }
 }

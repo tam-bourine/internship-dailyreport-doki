@@ -26,9 +26,7 @@
         <div class="nippo__bottom">
           <div class="nippo__tags">
             <ul class="nippo__tag-lists">
-              <li class="nippo__tag">html</li>
-              <li class="nippo__tag">css</li>
-              <li class="nippo__tag">javascirpt</li>
+              <li class="nippo__tag" v-for="tag in this.tags" :key="tag.id">{{tag.name}}</li>
             </ul>
           </div>
           <div class="nippo__like">
@@ -48,11 +46,11 @@
 <script>
 import MarkdownItVue from "markdown-it-vue";
 import "markdown-it-vue/dist/markdown-it-vue.css";
-import VueStar from "vue-star";
+import Tag from "~/components/Tag.vue";
 export default {
   components: {
     MarkdownItVue,
-    VueStar
+    Tag
   },
   props: [
     "author",
@@ -63,7 +61,8 @@ export default {
     "id",
     "articleId",
     "likes",
-    "likeList"
+    "likeList",
+    "tags"
   ],
   data() {
     return {
@@ -130,6 +129,7 @@ export default {
       this.requesting = true;
       const res = await this.$axios.delete("/posts/" + this.articleId);
       this.$emit("update");
+      alert("日報を削除しました٩( 'ω' )");
       this.requesting = false;
     },
 
@@ -417,9 +417,6 @@ $xsm: 528px;
 
 .likedHeart {
   animation: heart-burst 0.8s steps(28) 1;
-}
-
-.unlikedHeart {
 }
 
 @keyframes heart-burst {

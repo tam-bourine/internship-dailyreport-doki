@@ -78,4 +78,7 @@ export default {
 
 
 <style lang="scss">
+html {
+  background-color: #eee;
+}
 </style>
