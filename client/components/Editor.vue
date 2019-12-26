@@ -50,29 +50,7 @@
             cols="30"
             v-model="script"
             rows="10"
-            placeholder="今日の日報をMarkdown記法で書いて共有しよう！
-<見出し>
-# 見出し 1
-## 見出し 2
-### 見出し 3
-
-<強調>
-**強調**
-
-<リンク>
-[テキスト](URL)
-
-<コード>
-```javascript
-let welcome =“welcome”;
-console.log(welcome);
-```
-
-<リスト>
-- 1
-- 2
-- 3
-"
+            placeholder="今日の日報をMarkdown記法で書いて共有しよう！"
           ></textarea>
         </div>
 
@@ -134,7 +112,6 @@ console.log(welcome);
           <font-awesome-icon icon="download" style="margin-right:6px" class="editor__footer-icon"></font-awesome-icon>日報を更新
         </a>
         <!-- v-if end -->
-
         <a class="editor__footer-btn icon--small clicked" @click="showMenu=!showMenu">
           <span :class="{clicked:!showMenu,unClicked:showMenu}">▼</span>
           <div class="editor__menu visible" v-if="showMenu">
@@ -153,9 +130,7 @@ console.log(welcome);
           </div>
         </a>
       </div>
-
     </div>
-
     <!-- Editor Wrapper -->
   </section>
 </template>
@@ -163,11 +138,9 @@ console.log(welcome);
 <script>
 import MarkdownItVue from "markdown-it-vue";
 import "markdown-it-vue/dist/markdown-it-vue.css";
-import VueStar from 'vue-star';
-
 export default {
   components: {
-    MarkdownItVue,VueStar
+    MarkdownItVue
   },
   data() {
     return {
@@ -191,12 +164,16 @@ export default {
     */
     async postNippo() {
         if(this.isRequesting()) return;
-
         if(this.script == ''　) {
             alert('何か書いてください！(# ﾟДﾟ)')
             return;
-        } else if(this.tag == '' ) {
+        } else if(this.tag == '') {
             alert("タグが入力されていませんよ！(ﾉﾟοﾟ)ﾉ ")
+            return;
+        }
+
+        else if(!this.tagCheck()) {
+            alert("タグが長すぎます！！(# ﾟДﾟ) ");
             return;
         }
         this.requesting = true;
@@ -257,6 +234,18 @@ export default {
         this.$store.commit('setDraft',this.script);
         alert('あなたの働きを保存しました∠(｀・ω・´)/')
     },
+    /*
+    １０文字以上のタグを含んでいないか確認
+    */
+    tagCheck() {
+        let checkArray = this.tag.split(' ');
+        for(let item in checkArray ) {
+            if(checkArray[item].length > 10) {
+                return false;
+            }
+        }
+        return true;
+},
 
         /*
     Apiリクエスト中であれば新しいリクエストを無視する
@@ -275,7 +264,6 @@ export default {
     async postTag(nippoId) {
         let tagList = this.tag.split(' ');
         tagList = tagList.slice(0,3);
-        console.log(tagList);
         const res =  await this.$axios.post("/posts/"+nippoId+"/tags",{
             tags:tagList
         });
