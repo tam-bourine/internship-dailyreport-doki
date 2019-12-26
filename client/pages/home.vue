@@ -280,6 +280,7 @@ body {
 $tab: 993px;
 $sm: 740px;
 $xsm: 614px;
+$phone: 411px;
 
 @mixin tab {
   @media (max-width: ($tab)) {
@@ -299,6 +300,12 @@ $xsm: 614px;
   }
 }
 
+@mixin phone {
+  @media (min-width: ($phone)) {
+    @content;
+  }
+}
+
 .home {
   background-color: #eee;
   &__wrapper {
@@ -308,6 +315,9 @@ $xsm: 614px;
     text-align: center;
     padding-bottom: 100px;
     display: flex;
+    @include sm {
+      overflow: hidden;
+    }
   }
 
   &__title {
@@ -362,10 +372,10 @@ $xsm: 614px;
     display: flex;
     flex-direction: column;
     text-align: left;
-    width: 200px;
 
     @include sm {
-      width: 150px;
+      width: 100%;
+      text-align: center;
     }
   }
 
@@ -384,7 +394,7 @@ $xsm: 614px;
     margin-top: 8px;
 
     @include sm {
-      font-size: 10px;
+      font-size: 12px;
       padding: 10px 30px 10px 20px;
     }
 
@@ -473,6 +483,9 @@ $xsm: 614px;
     display: gird;
     grid-gap: 8px;
     max-width: 200px;
+    @include sm {
+      max-width: 168px;
+    }
   }
 
   &__tag {

@@ -190,6 +190,7 @@ export default {
 $tab: 993px;
 $sm: 740px;
 $xsm: 614px;
+$phone: 411px;
 
 @mixin tab {
   @media (max-width: ($tab)) {
@@ -205,6 +206,12 @@ $xsm: 614px;
 
 @mixin xsm {
   @media (max-width: ($xsm)) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media (max-width: ($phone)) {
     @content;
   }
 }
@@ -237,7 +244,8 @@ $xsm: 614px;
     padding: 64px;
 
     @include sm {
-      width: 70%;
+      width: 90%;
+
       padding: 32px;
     }
   }
@@ -247,6 +255,10 @@ $xsm: 614px;
   }
   &__title {
     font-size: 24px;
+
+    @include phone {
+      font-size: 16px;
+    }
   }
 
   &__user-info {
@@ -310,6 +322,9 @@ select {
 .btn--warning {
   background-color: #e85679;
   margin-left: 24px;
+  @include phone {
+    margin-left: 14px;
+  }
 }
 </style>
 

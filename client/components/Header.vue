@@ -8,8 +8,8 @@
             <img src="../assets/img/header__title.png" alt class="header__title" />
           </nuxt-link>
         </h1>
-        <nuxt-link to="/home" class="header__link">ホーム</nuxt-link>
-        <nuxt-link to="/users" class="header__link">ユーザー一覧</nuxt-link>
+        <nuxt-link to="/home" class="header__link header__mobile-disable">ホーム</nuxt-link>
+        <nuxt-link to="/users" class="header__link header__mobile-disable">ユーザー一覧</nuxt-link>
       </div>
       <div class="header__box">
         <nuxt-link to="/editor" class="header__btn">
@@ -31,6 +31,16 @@
             <li class="header__dropdown-item">
               <nuxt-link :to="{name: 'user-user', params: {user:this.$auth.user.id} }">
                 <font-awesome-icon class="header__dropdown-icon" icon="address-card"></font-awesome-icon>マイページ
+              </nuxt-link>
+            </li>
+            <li class="header__dropdown-item">
+              <nuxt-link to="/home">
+                <font-awesome-icon class="header__dropdown-icon" icon="home"></font-awesome-icon>ホーム
+              </nuxt-link>
+            </li>
+            <li class="header__dropdown-item">
+              <nuxt-link to="/users">
+                <font-awesome-icon class="header__dropdown-icon" icon="users"></font-awesome-icon>ユーザー一覧
               </nuxt-link>
             </li>
             <li class="header__dropdown-item">
@@ -130,6 +140,7 @@ export default {
 
 $tab: 614px;
 $sm: 528px;
+$phone: 411px;
 @mixin tab {
   @media (max-width: ($tab)) {
     @content;
@@ -137,6 +148,12 @@ $sm: 528px;
 }
 @mixin sm {
   @media (max-width: ($sm)) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media (max-width: ($phone)) {
     @content;
   }
 }
@@ -297,6 +314,14 @@ $sm: 528px;
     text-align: center;
     &:hover {
       color: black;
+    }
+  }
+
+  &__mobile-disable {
+    @include sm {
+    }
+    @include phone {
+      display: none;
     }
   }
 }

@@ -220,7 +220,7 @@ export default {
 $tab: 993px;
 $sm: 740px;
 $xsm: 614px;
-
+$phone: 376px;
 @mixin tab {
   @media (max-width: ($tab)) {
     @content;
@@ -239,6 +239,12 @@ $xsm: 614px;
   }
 }
 
+@mixin phone {
+  @media (max-width: ($phone)) {
+    @content;
+  }
+}
+
 .user {
   background-color: #eee;
   &__wrapper {
@@ -249,6 +255,9 @@ $xsm: 614px;
 
     @include tab {
       margin: 0;
+    }
+    @include phone {
+      overflow: hidden;
     }
   }
   &__left {
@@ -274,6 +283,11 @@ $xsm: 614px;
     }
 
     @include xsm {
+      margin: 0 auto;
+      width: 90%;
+    }
+
+    @include phone {
       margin: 0 auto;
       width: 90%;
     }
