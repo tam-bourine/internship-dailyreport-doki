@@ -86,7 +86,6 @@ export default {
       });
         }catch(error) {
 
-            console.log(error);
             alert("エラーが起きました！入力内容を確認してください(｡・ε・｡)")
             return
         }
