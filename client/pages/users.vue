@@ -99,7 +99,7 @@ $phone: 327px;
 }
 
 @mixin phone {
-  @media (min-width: ($phone)) {
+  @media (max-width: ($phone)) {
     @content;
   }
 }
