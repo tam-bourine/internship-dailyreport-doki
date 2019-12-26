@@ -214,7 +214,6 @@ export default {
       });
     },
     getIcon() {
-      console.log(this.$auth.user.id);
       if (this.$auth.user.id % 5 == 0) {
         return this.icons[0].image;
       } else if (this.$auth.user.id % 4 == 0) {
@@ -247,7 +246,6 @@ export default {
       let tempList = [];
       if (this.tagSelected.length == 0) {
         this.articles = this.articlesBackUp;
-        console.log(this.articles);
         return;
       }
 
@@ -480,8 +478,6 @@ $phone: 411px;
   &__tags {
     margin-right: 14px;
     padding: 20px;
-    display: gird;
-    grid-gap: 8px;
     max-width: 200px;
     @include sm {
       max-width: 168px;

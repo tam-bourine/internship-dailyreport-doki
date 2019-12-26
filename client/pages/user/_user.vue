@@ -168,7 +168,6 @@ export default {
     データベースから最新の投稿データを取得
      */
     async updateList() {
-      alert("running this function");
       let draftData = await this.$axios.get("/posts/" + this.$auth.user.id);
       this.articles = draftData.data;
       this.articles = this.sortByLatest();

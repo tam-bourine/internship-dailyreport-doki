@@ -20,7 +20,6 @@ export default {
           n => n != this.name
         );
       }
-      console.log(this.$parent.tagSelected);
     }
   }
 };

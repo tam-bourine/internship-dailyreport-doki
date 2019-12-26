@@ -136,7 +136,6 @@ export default {
         }
         return true;
       } else {
-        console.log("wrong mail address");
         return false;
       }
     },
@@ -169,7 +168,6 @@ export default {
     },
 
     getIcon() {
-      console.log(this.$auth.user);
       if (this.$auth.user.id % 5 == 0) {
         return this.icons[0].image;
       } else if (this.$auth.user.id % 4 == 0) {
