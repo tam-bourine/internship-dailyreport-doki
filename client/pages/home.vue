@@ -313,7 +313,7 @@ $phone: 411px;
     text-align: center;
     padding-bottom: 100px;
     display: flex;
-    @include sm {
+    @include xsm {
       overflow: hidden;
     }
   }
